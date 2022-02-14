@@ -25,3 +25,23 @@ console.log(Number.MAX_SAFE_INTEGER + 2);
 console.log(Number.MAX_SAFE_INTEGER + 3);
 console.log(Number.MAX_SAFE_INTEGER + 4);
 console.log(Number.MAX_SAFE_INTEGER + 5);
+let scale = 0;
+let a = 1 / scale; // Infinity
+let b = 0 / scale; // NaN
+let c = -a; // -Infinity
+let d = 1 / c; // -0
+console.log(typeof(NaN)); // "number"
+let alot = 9007199254740991n; // n at the end makes it a BigInt!
+console.log(alot + 1n); // 9007199254740992n
+console.log(alot + 2n); // 9007199254740993n
+console.log(alot + 3n); // 9007199254740994n
+console.log(alot + 4n); // 9007199254740995n
+console.log(alot + 5n); // 9007199254740996n
+console.log(typeof("こんにちは")); // "string"
+console.log(typeof('こんにちは')); // "string"
+console.log(typeof(`こんにちは`)); // "string"
+console.log(typeof('')); // "string"
+let cat = 'Cheshire';
+console.log(cat.length); // 8
+console.log(cat[0]); // "C"
+console.log(cat[1]); // "h"
