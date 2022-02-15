@@ -1,0 +1,373 @@
+{
+    "type" : "FeatureCollection", 
+    "crs" : 
+    {
+      "type" : "name", 
+      "properties" : 
+      {
+        "name" : "EPSG:4326"
+      }
+    }, 
+    "features" : [
+      {
+        "type" : "Feature", 
+        "id" : 1, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.0889363550034, 42.3232722745936
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 1, 
+          "OBJECTID" : 1, 
+          "NAME" : "Herbert Bowen", 
+          "ADDRESS" : "3648 W. Vernor", 
+          "Shape_Leng" : 610.575893267
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 2, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.1074047815954, 42.3045920049275
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 2, 
+          "OBJECTID" : 2, 
+          "NAME" : "James Valentine Campbell", 
+          "ADDRESS" : "6625 W. Fort", 
+          "Shape_Leng" : 460.267388776
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 3, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -82.9743738714883, 42.4015604421817
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 3, 
+          "OBJECTID" : 3, 
+          "NAME" : "Chandler Park", 
+          "ADDRESS" : "12800 Harper", 
+          "Shape_Leng" : 1127.22281022
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 4, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.2053507216157, 42.3951959597134
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 4, 
+          "OBJECTID" : 4, 
+          "NAME" : "Henry Chaney", 
+          "ADDRESS" : "16101 Grand River", 
+          "Shape_Leng" : 545.314628561
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 5, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.1273037060118, 42.3319179966124
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 5, 
+          "OBJECTID" : 5, 
+          "NAME" : "Edwin F. Conely", 
+          "ADDRESS" : "4600 Martin", 
+          "Shape_Leng" : 887.414979873
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 6, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.0468735978101, 42.333955219865
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 6, 
+          "OBJECTID" : 6, 
+          "NAME" : "Downtown Library", 
+          "ADDRESS" : "121 Gratiot", 
+          "Shape_Leng" : 819.042480594
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 7, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.093333465869, 42.3632995008773
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 7, 
+          "OBJECTID" : 7, 
+          "NAME" : "Divie B. Duffield", 
+          "ADDRESS" : "2507 W Grand Blvd", 
+          "Shape_Leng" : 684.368197211
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 8, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.2204955738724, 42.3580849371835
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 8, 
+          "OBJECTID" : 8, 
+          "NAME" : "Thomas A. Edison", 
+          "ADDRESS" : "18400 Joy Rd.", 
+          "Shape_Leng" : 505.978478304
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 9, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.0233547296668, 42.3404650167075
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 9, 
+          "OBJECTID" : 9, 
+          "NAME" : "Elmwood Park", 
+          "ADDRESS" : "550 Chene", 
+          "Shape_Leng" : 2273.43493156
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 10, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -82.9840339907145, 42.4271266085618
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 10, 
+          "OBJECTID" : 10, 
+          "NAME" : "Benjamin Franklin", 
+          "ADDRESS" : "13651 E. McNichols", 
+          "Shape_Leng" : 496.852463077
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 11, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.1728289997091, 42.4163757991897
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 11, 
+          "OBJECTID" : 11, 
+          "NAME" : "Bela Hubbard", 
+          "ADDRESS" : "12929 W. McNichols", 
+          "Shape_Leng" : 495.190086714
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 12, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.0601179457323, 42.4147980249539
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 12, 
+          "OBJECTID" : 12, 
+          "NAME" : "Elisabeth Knapp", 
+          "ADDRESS" : "13330 Conant", 
+          "Shape_Leng" : 1085.20397201
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 13, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.0667065533495, 42.3583934001273
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 13, 
+          "OBJECTID" : 13, 
+          "NAME" : "Main Library", 
+          "ADDRESS" : "5201 Woodward", 
+          "Shape_Leng" : 2552.12920568
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 14, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.1273972049101, 42.3967531435975
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 14, 
+          "OBJECTID" : 14, 
+          "NAME" : "Francis Parkman", 
+          "ADDRESS" : "1766 Oakman Blvd", 
+          "Shape_Leng" : 833.927671916
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 15, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.2492470710363, 42.4135720109639
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 15, 
+          "OBJECTID" : 15, 
+          "NAME" : "Redford", 
+          "ADDRESS" : "21200 Grand River", 
+          "Shape_Leng" : 733.119241647
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 16, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.1441698452955, 42.4312647461012
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 16, 
+          "OBJECTID" : 16, 
+          "NAME" : "Sherwood Forest", 
+          "ADDRESS" : "7117 W. 7 Mile", 
+          "Shape_Leng" : 621.908667846
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 17, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.029770305616, 42.4336284533504
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 17, 
+          "OBJECTID" : 17, 
+          "NAME" : "Laura Ingalls Wilder", 
+          "ADDRESS" : "7140 E. 7 Mile", 
+          "Shape_Leng" : 645.507524709
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 18, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -82.9373709727981, 42.4040080649699
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 18, 
+          "OBJECTID" : 18, 
+          "NAME" : "Jefferson", 
+          "ADDRESS" : "12350 E. Outer Drive", 
+          "Shape_Leng" : 531.779128266
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 19, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.0742204197514, 42.3430973666013
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 19, 
+          "OBJECTID" : 19, 
+          "NAME" : "Douglass", 
+          "ADDRESS" : "3666 Grand River", 
+          "Shape_Leng" : 1383.41012103
+        }
+      }, 
+      {
+        "type" : "Feature", 
+        "id" : 20, 
+        "geometry" : 
+        {
+          "type" : "Point", 
+          "coordinates" : [
+            -83.2176391940128, 42.429774469432
+          ]
+        }, 
+        "properties" : {
+          "OBJECTID_1" : 20, 
+          "OBJECTID" : 20, 
+          "NAME" : "Jessie C. Chase", 
+          "ADDRESS" : "17731 W 7 Mile", 
+          "Shape_Leng" : 625.883527428
+        }
+      }
+    ]
+  }
