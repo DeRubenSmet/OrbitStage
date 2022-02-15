@@ -48,7 +48,7 @@ export default function App() {
           zoom: 3
         }}
         mapStyle="mapbox://styles/mapbox/light-v9"
-        mapboxAccessToken={MAPBOX_TOKEN}
+        mapboxAccessToken={"pk.eyJ1IjoiYmFyYmFyb3NzbyIsImEiOiJja3ptd2Zlb3AwMDIyMm9xb3B3bjhqYjJiIn0.R0SXEE12p1SX1UbF7wqZ7g"}
         interactiveLayerIds={['data']}
         onMouseMove={onHover}
       >
