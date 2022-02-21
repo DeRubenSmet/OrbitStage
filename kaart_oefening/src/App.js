@@ -21,7 +21,7 @@ function App() {
       })
     }
     }
-      initialViewState={{
+      initialViewState={{  
         longitude: 3.884229,
         latitude: 51.006661,
         zoom: 3
