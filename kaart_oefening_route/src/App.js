@@ -95,7 +95,7 @@ function App() {
     );
 
     // Update the source with this new data
-    mapRef.current.getSource('point').setData(point);
+    mapRef.current.getMap().getSource('pointSource').setData(point);
 
     // Request the next frame of animation as long as the end has not been reached
     if (counter < steps) {
@@ -137,7 +137,7 @@ function App() {
           }>
         </Layer>
       </Source>
-      <Source type='geojson' data={point}>
+      <Source id='pointSource' type='geojson' data={point}>
         <Layer
           {
           ...{
@@ -165,7 +165,7 @@ function App() {
             point.features[0].geometry.coordinates = origin;
  
             // Update the source layer
-            mapRef.current.getSource('point').setData(point);
+            mapRef.current.getMap().getSource('pointSource').setData(point);
              
             // Reset the counter
             counter = 0;
