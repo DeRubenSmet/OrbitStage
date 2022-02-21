@@ -6,13 +6,6 @@ import './index.css'
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYmFyYmFyb3NzbyIsImEiOiJja3ptd2Zlb3AwMDIyMm9xb3B3bjhqYjJiIn0.R0SXEE12p1SX1UbF7wqZ7g';
 
-// San Francisco
-const origin = [-122.414, 37.776];
-
-// Washington DC
-const destination = [-77.032, 38.913];
-
-// A simple line from origin to destination.
 const route = {
   'id': 'route',
   "type": "FeatureCollection",
@@ -105,8 +98,6 @@ const route = {
   ]
 };
 
-// A single point that animates along the route.
-// Coordinates are initially set to origin.
 const point = {
   'id': 'point',
   'type': 'FeatureCollection',
@@ -116,11 +107,15 @@ const point = {
       'properties': {},
       'geometry': {
         'type': 'Point',
-        'coordinates': origin
+        'coordinates': [3.8857229053974147,
+          51.00703382745128]
       }
     }
   ]
 };
+const targetRoute = route.features[0].geometry.coordinates;
+// this is the path the camera will move along
+const cameraRoute = route.features[0].geometry.coordinates;
 
 // Calculate the distance in kilometers between route start/end point.
 const lineDistance = turf.length(route.features[0]);
@@ -149,6 +144,7 @@ let counter = 0;
 function App() {
   const mapRef = React.useRef();
   function animate() {
+
     const start =
       route.features[0].geometry.coordinates[
       counter >= steps ? counter - 1 : counter
@@ -171,13 +167,21 @@ function App() {
       turf.point(start),
       turf.point(end)
     );
-
+    const camera = mapRef.current.getFreeCameraOptions();
     // Update the source with this new data
     mapRef.current.getMap().getSource('pointSource').setData(point);
+    
+    camera.lookAtPoint({
+      lng: point.features[0].geometry.coordinates[0],
+      lat: point.features[0].geometry.coordinates[1]
+    });
+    mapRef.current.setFreeCameraOptions(camera);
 
     // Request the next frame of animation as long as the end has not been reached
     if (counter < steps) {
       requestAnimationFrame(animate);
+      
+      //console.log(point.features[0].geometry.coordinates[0]);
     }
 
     counter = counter + 1;
@@ -185,16 +189,18 @@ function App() {
 
   return (
     <Map ref={mapRef}
-    
-    onLoad={
-      () => {
-        animate(counter);
+
+      onLoad={
+        () => {
+          //console.log(point.features[0].geometry.coordinates[0])
+          //console.log(route.features[0].geometry.coordinates)
+          animate(counter);
+        }
       }
-    }
       initialViewState={{
-        latitude: 37.8,
-        longitude: -96,
-        zoom: 3
+        latitude: 51.006822,
+        longitude: 3.885334,
+        zoom: 22  
       }}
       style={{ width: 1500, height: 700 }}
       mapStyle="mapbox://styles/mapbox/streets-v11"
@@ -239,17 +245,18 @@ function App() {
         </Layer>
         <div className="overlay">
           <button id='replay'
-          onClick={ () => {
-            point.features[0].geometry.coordinates = origin;
- 
-            // Update the source layer
-            mapRef.current.getMap().getSource('pointSource').setData(point);
-             
-            // Reset the counter
-            counter = 0;
-             
-            // Restart the animation
-            animate(counter);}}>Replay</button>
+            onClick={() => {
+              point.features[0].geometry.coordinates = origin;
+
+              // Update the source layer
+              mapRef.current.getMap().getSource('pointSource').setData(point);
+
+              // Reset the counter
+              counter = 0;
+
+              // Restart the animation
+              animate(counter);
+            }}>Replay</button>
         </div>
       </Source>
     </Map>
