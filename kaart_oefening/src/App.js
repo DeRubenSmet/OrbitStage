@@ -8,15 +8,25 @@ import locaties from './locaties.json';
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYmFyYmFyb3NzbyIsImEiOiJja3ptd2Zlb3AwMDIyMm9xb3B3bjhqYjJiIn0.R0SXEE12p1SX1UbF7wqZ7g';
 
 function App() {
+  const mapRef = React.useRef();
   return (
-    <Map
-      onLoad={}
+    <Map ref={mapRef}
+    onLoad={
+      () => {
+        mapRef.current.loadImage(
+          Logo,
+          (error, image) => {
+          if (error) throw error;
+        mapRef.current.addImage('custom-marker', image);
+      })
+    }
+    }
       initialViewState={{
         longitude: 3.884229,
         latitude: 51.006661,
-        zoom: 14
+        zoom: 3
       }}
-      style={{width: 500, height: 500}}
+      style={{width: 1850, height: 950}}
       mapStyle="mapbox://styles/mapbox/streets-v9"
       mapboxAccessToken= {MAPBOX_TOKEN}
     >
@@ -27,7 +37,8 @@ function App() {
               'type': 'symbol',
               'source': 'points',
               'layout': {
-              'icon-image': 'alcohol-shop-11',
+              'icon-image': 'custom-marker',
+              'icon-size': 0.3,
               // get the title name from the source's "title" property
               'text-field': ['get', 'title'],
               'text-font': [
