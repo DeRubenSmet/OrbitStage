@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Map, { Source, Layer, Marker } from 'react-map-gl';
 import * as turf from '@turf/turf'
 import './index.css'
@@ -143,8 +143,12 @@ let counter = 0;
 
 function App() {
   const mapRef = React.useRef();
+  const [follow, setFollow] = useState(false);
+  useEffect(() => {
+    setFollow(follow)
+  }, [true]);
   function animate() {
-
+    console.log(follow)
     const start =
       route.features[0].geometry.coordinates[
       counter >= steps ? counter - 1 : counter
@@ -167,20 +171,29 @@ function App() {
       turf.point(start),
       turf.point(end)
     );
-    const camera = mapRef.current.getFreeCameraOptions();
+
     // Update the source with this new data
     mapRef.current.getMap().getSource('pointSource').setData(point);
-    
-    camera.lookAtPoint({
-      lng: point.features[0].geometry.coordinates[0],
-      lat: point.features[0].geometry.coordinates[1]
-    });
-    mapRef.current.setFreeCameraOptions(camera);
+    const camera = mapRef.current.getFreeCameraOptions();
+    if (follow) {
+
+      mapRef.current.setZoom(22);
+      camera.lookAtPoint({
+        lng: point.features[0].geometry.coordinates[0],
+        lat: point.features[0].geometry.coordinates[1]
+      });
+      mapRef.current.setFreeCameraOptions(camera);
+    }
+    else{
+      mapRef.current.setZoom(18);
+      
+    }
+
 
     // Request the next frame of animation as long as the end has not been reached
     if (counter < steps) {
       requestAnimationFrame(animate);
-      
+
       //console.log(point.features[0].geometry.coordinates[0]);
     }
 
@@ -200,7 +213,7 @@ function App() {
       initialViewState={{
         latitude: 51.006822,
         longitude: 3.885334,
-        zoom: 22  
+        zoom: 22
       }}
       style={{ width: 1500, height: 700 }}
       mapStyle="mapbox://styles/mapbox/streets-v11"
@@ -235,6 +248,7 @@ function App() {
               // To add a new image to the style at runtime see
               // https://docs.mapbox.com/mapbox-gl-js/example/add-image/
               'icon-image': 'airport-15',
+              'icon-size': 2,
               'icon-rotate': ['get', 'bearing'],
               'icon-rotation-alignment': 'map',
               'icon-allow-overlap': true,
@@ -257,6 +271,13 @@ function App() {
               // Restart the animation
               animate(counter);
             }}>Replay</button>
+        </div>
+        <div className="overlay2">
+          <button id='follow'
+            onClick={() => {
+              setFollow(!follow)
+              console.log(follow)
+            }}>Follow</button>
         </div>
       </Source>
     </Map>
