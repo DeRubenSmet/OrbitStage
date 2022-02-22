@@ -125,7 +125,7 @@ const arc = [];
 // Number of steps to use in the arc and animation, more steps means
 // a smoother arc and animation, but too many steps will result in a
 // low frame rate
-const steps = 500;
+const steps = 1000;
 
 // Draw an arc between the `origin` & `destination` of the two points
 for (let i = 0; i < lineDistance; i += lineDistance / steps) {
@@ -146,10 +146,18 @@ function App() {
   const followRef = React.useRef();
   const [follow, setFollow] = useState(false);
   const [followUnfollow, setFollowUnfollow] = useState("Follow");
+  const [viewport, setViewport] = useState({
+    latitude: 51.006822,
+    longitude: 3.885334,
+    bearing: 0,
+    zoom: 19
+  });
+
   useEffect(() => {
     followRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(followRef.current);
   }, [follow]);
+
   function animate() {
     console.log(follow)
     const start =
@@ -180,17 +188,13 @@ function App() {
     const camera = mapRef.current.getFreeCameraOptions();
     if (follow) {
 
-      mapRef.current.setZoom(22);
       camera.lookAtPoint({
         lng: point.features[0].geometry.coordinates[0],
         lat: point.features[0].geometry.coordinates[1]
       });
       mapRef.current.setFreeCameraOptions(camera);
     }
-    else {
-      mapRef.current.setZoom(18);
 
-    }
 
 
     // Request the next frame of animation as long as the end has not been reached
@@ -213,11 +217,7 @@ function App() {
           animate(counter);
         }
       }
-      initialViewState={{
-        latitude: 51.006822,
-        longitude: 3.885334,
-        zoom: 22
-      }}
+      {...viewport}
       style={{ width: 1500, height: 700 }}
       mapStyle="mapbox://styles/mapbox/streets-v11"
       mapboxAccessToken={MAPBOX_TOKEN}
@@ -279,11 +279,19 @@ function App() {
           <button id='follow'
             onClick={() => {
               setFollow(!follow);
-              if(followUnfollow === "Follow"){
+              if (followUnfollow === "Follow") {
                 setFollowUnfollow("Unfollow");
+                setViewport({ zoom: 21 })
               }
-              else{
+              else {
                 setFollowUnfollow("Follow");
+                setViewport({
+                  latitude: 51.006822,
+                  longitude: 3.885334,
+                  bearing: 0,
+                  pitch: 0,
+                  zoom: 19
+                })
               }
               console.log(follow);
             }}>{followUnfollow}</button>
