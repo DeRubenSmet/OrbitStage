@@ -143,10 +143,13 @@ let counter = 0;
 
 function App() {
   const mapRef = React.useRef();
+  const followRef = React.useRef();
   const [follow, setFollow] = useState(false);
+  const [followUnfollow, setFollowUnfollow] = useState("Follow");
   useEffect(() => {
-    setFollow(follow)
-  }, [true]);
+    followRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(followRef.current);
+  }, [follow]);
   function animate() {
     console.log(follow)
     const start =
@@ -184,15 +187,15 @@ function App() {
       });
       mapRef.current.setFreeCameraOptions(camera);
     }
-    else{
+    else {
       mapRef.current.setZoom(18);
-      
+
     }
 
 
     // Request the next frame of animation as long as the end has not been reached
     if (counter < steps) {
-      requestAnimationFrame(animate);
+      followRef.current = requestAnimationFrame(animate);
 
       //console.log(point.features[0].geometry.coordinates[0]);
     }
@@ -275,9 +278,15 @@ function App() {
         <div className="overlay2">
           <button id='follow'
             onClick={() => {
-              setFollow(!follow)
-              console.log(follow)
-            }}>Follow</button>
+              setFollow(!follow);
+              if(followUnfollow === "Follow"){
+                setFollowUnfollow("Unfollow");
+              }
+              else{
+                setFollowUnfollow("Follow");
+              }
+              console.log(follow);
+            }}>{followUnfollow}</button>
         </div>
       </Source>
     </Map>
