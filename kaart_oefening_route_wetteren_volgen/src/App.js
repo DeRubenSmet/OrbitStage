@@ -2,13 +2,13 @@ import * as React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import Map, { Source, Layer, Marker } from 'react-map-gl';
 import * as turf from '@turf/turf'
-import './index.css'
+import './index.css';
+import policeCar from './police-car.png';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYmFyYmFyb3NzbyIsImEiOiJja3ptd2Zlb3AwMDIyMm9xb3B3bjhqYjJiIn0.R0SXEE12p1SX1UbF7wqZ7g';
 
 const route = {
   'id': 'route',
-  "type": "FeatureCollection",
   "features": [
     {
       "type": "Feature",
@@ -113,81 +113,66 @@ const point = {
     }
   ]
 };
-const targetRoute = route.features[0].geometry.coordinates;
-// this is the path the camera will move along
-const cameraRoute = route.features[0].geometry.coordinates;
 
-// Calculate the distance in kilometers between route start/end point.
 const lineDistance = turf.length(route.features[0]);
-
 const arc = [];
-
-// Number of steps to use in the arc and animation, more steps means
-// a smoother arc and animation, but too many steps will result in a
-// low frame rate
 const steps = 1000;
 
-// Draw an arc between the `origin` & `destination` of the two points
 for (let i = 0; i < lineDistance; i += lineDistance / steps) {
   const segment = turf.along(route.features[0], i);
   arc.push(segment.geometry.coordinates);
 }
 
-// Update the route with calculated arc coordinates
 route.features[0].geometry.coordinates = arc;
 
-// Used to increment the value of the point measurement against the route.
 let counter = 0;
-
 
 
 function App() {
   const mapRef = React.useRef();
+  //const [pauseStatus, setPauseStatus] = useState(false);
   const followRef = React.useRef();
   const [follow, setFollow] = useState(false);
-  const [followUnfollow, setFollowUnfollow] = useState("Follow");
+  const [followUnfollow, setFollowUnfollow] = useState("follow");
   const [viewport, setViewport] = useState({
     latitude: 51.006822,
     longitude: 3.885334,
-    bearing: 0,
     zoom: 19
   });
 
   useEffect(() => {
-    followRef.current = requestAnimationFrame(animate);
+    if(counter !== 0){
+          followRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(followRef.current);
+    }
   }, [follow]);
 
   function animate() {
-    console.log(follow)
+    if (!mapRef.current) {
+      return;
+    }
     const start =
       route.features[0].geometry.coordinates[
       counter >= steps ? counter - 1 : counter
       ];
+
     const end =
       route.features[0].geometry.coordinates[
       counter >= steps ? counter : counter + 1
       ];
-    if (!start || !end) return;
 
-    // Update point geometry to a new position based on counter denoting
-    // the index to access the arc
+    if (!start || !end) return;
     point.features[0].geometry.coordinates =
       route.features[0].geometry.coordinates[counter];
 
-    // Calculate the bearing to ensure the icon is rotated to match the route arc
-    // The bearing is calculated between the current point and the next point, except
-    // at the end of the arc, which uses the previous point and the current point
     point.features[0].properties.bearing = turf.bearing(
       turf.point(start),
       turf.point(end)
     );
 
-    // Update the source with this new data
     mapRef.current.getMap().getSource('pointSource').setData(point);
     const camera = mapRef.current.getFreeCameraOptions();
     if (follow) {
-
       camera.lookAtPoint({
         lng: point.features[0].geometry.coordinates[0],
         lat: point.features[0].geometry.coordinates[1]
@@ -195,34 +180,36 @@ function App() {
       mapRef.current.setFreeCameraOptions(camera);
     }
 
-
-
-    // Request the next frame of animation as long as the end has not been reached
     if (counter < steps) {
       followRef.current = requestAnimationFrame(animate);
-
-      //console.log(point.features[0].geometry.coordinates[0]);
     }
 
     counter = counter + 1;
+
+    if (counter === 999) {
+      counter = 0;
+    }
   }
 
   return (
     <Map ref={mapRef}
-
       onLoad={
         () => {
-          //console.log(point.features[0].geometry.coordinates[0])
-          //console.log(route.features[0].geometry.coordinates)
-          animate(counter);
+          mapRef.current.loadImage(
+            policeCar,
+            (error, image) => {
+              if (error) throw error;
+              mapRef.current.addImage('police-car', image);
+            })
         }
       }
       {...viewport}
+      onMove={evt => setViewport(evt.viewport)}
       style={{ width: 1500, height: 700 }}
       mapStyle="mapbox://styles/mapbox/streets-v11"
       mapboxAccessToken={MAPBOX_TOKEN}
     >
-      <Source type='geojson' data={route}>
+      {/* <Source type='geojson' data={route}>
         <Layer
           {
           ...{
@@ -236,7 +223,7 @@ function App() {
           }
           }>
         </Layer>
-      </Source>
+      </Source> */}
       <Source id='pointSource' type='geojson' data={point}>
         <Layer
           {
@@ -245,47 +232,39 @@ function App() {
             'source': 'point',
             'type': 'symbol',
             'layout': {
-              // This icon is a part of the Mapbox Streets style.
-              // To view all images available in a Mapbox style, open
-              // the style in Mapbox Studio and click the "Images" tab.
-              // To add a new image to the style at runtime see
-              // https://docs.mapbox.com/mapbox-gl-js/example/add-image/
-              'icon-image': 'airport-15',
-              'icon-size': 2,
+              'icon-image': 'police-car',
+              'icon-size': 0.08,
               'icon-rotate': ['get', 'bearing'],
               'icon-rotation-alignment': 'map',
               'icon-allow-overlap': true,
-              'icon-ignore-placement': true
+              'icon-ignore-placement': true,
             }
           }
           }>
         </Layer>
         <div className="overlay">
-          <button id='replay'
-            onClick={() => {
-              point.features[0].geometry.coordinates = origin;
-
-              // Update the source layer
-              mapRef.current.getMap().getSource('pointSource').setData(point);
-
-              // Reset the counter
-              counter = 0;
-
-              // Restart the animation
+          <button id='start'
+          onClick={() => {
+            if(counter === 0){
               animate(counter);
-            }}>Replay</button>
+            } 
+          }
+        }
+          >Start</button>
         </div>
         <div className="overlay2">
           <button id='follow'
             onClick={() => {
               setFollow(!follow);
-              if (followUnfollow === "Follow") {
+              console.log(follow);
+              if (follow === false) {
                 setFollowUnfollow("Unfollow");
-                setViewport({ zoom: 21 })
+                setViewport({ ...viewport, zoom: 21 })
               }
               else {
                 setFollowUnfollow("Follow");
                 setViewport({
+                  ...viewport,
                   latitude: 51.006822,
                   longitude: 3.885334,
                   bearing: 0,
@@ -293,7 +272,6 @@ function App() {
                   zoom: 19
                 })
               }
-              console.log(follow);
             }}>{followUnfollow}</button>
         </div>
       </Source>
