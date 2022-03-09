@@ -48,12 +48,9 @@ code {
   z-index: 1;
 }
   
-  .tooltip div {
-    font-weight: bold;
-  }
   
   .tooltip span{
-    font-weight: normal;
+    font-weight: bold;
   }
 
   .control-panel {

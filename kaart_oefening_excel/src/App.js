@@ -247,7 +247,7 @@ function App() {
     >
       {hoverInfo && (
         <div className="tooltip">
-          <div><div>Gemeente: <span>{hoverInfo.feature.properties.NAAM}</span></div></div>
+          <div><span>{hoverInfo.feature.properties.NAAM}</span></div>
           {/* <div><div>Provincie: <span>{hoverInfo.feature.properties.province}</span></div></div>
           <div><div>Regio: <span>{hoverInfo.feature.properties.region}</span></div></div>
           <div><div>Shn: <span>{hoverInfo.feature.properties.shn}</span></div></div> */}
@@ -308,6 +308,21 @@ function App() {
           }
           }>
         </Layer>
+        <Layer
+        {
+          ...
+            {
+              'id': 'outline',
+              'type': 'line',
+              'source': 'mediaan prijs',
+              'minzoom': 10,
+              'layout': {},
+              'paint': {
+              'line-color': '#000',
+              'line-width': 2
+              }
+              
+          }}></Layer>
         {/* <Layer {
           ...{
             'id': 'label',
@@ -397,7 +412,22 @@ function App() {
         }}>
 
         </Layer>
-        
+        <Layer
+        {
+          ...
+            {
+              'id': 'outline2',
+              'type': 'line',
+              'source': 'mediaan prijs',
+              'minzoom': 8,
+              'maxzoom': 10,
+              'layout': {},
+              'paint': {
+              'line-color': '#000',
+              'line-width': 2
+              }
+              
+          }}></Layer>
       
         </Source>
         <Source id='provincies' type='geojson' data={geojsonProvinciesVlaanderen}>
@@ -436,7 +466,22 @@ function App() {
               'fill-opacity': 0.75
             }
         }}>
-        </Layer>      
+        </Layer> 
+        <Layer
+        {
+          ...
+            {
+              'id': 'outline3',
+              'type': 'line',
+              'source': 'mediaan prijs',
+              'maxzoom': 8,
+              'layout': {},
+              'paint': {
+              'line-color': '#000',
+              'line-width': 2
+              }
+              
+          }}></Layer>     
         </Source>
       {/* <Source id='oost' type='geojson' data={testOostVlaanderen}>
                 <Layer
