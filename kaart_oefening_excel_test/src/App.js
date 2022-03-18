@@ -9,6 +9,7 @@ import geojsonProvinciesVlaanderen from './Provincies.json';
 import geojsonArrondissementenVlaanderen from './ArrondissementenVlaanderen.json';
 import ControlPanel from './control-panel';
 import { Legend } from './components/Legend.js';
+import { useDebouncedCallback } from "use-debounce";
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYmFyYmFyb3NzbyIsImEiOiJja3ptd2Zlb3AwMDIyMm9xb3B3bjhqYjJiIn0.R0SXEE12p1SX1UbF7wqZ7g';
 const legendItemsGemeentes = [
@@ -122,7 +123,7 @@ function App() {
   const [stateGeojsonGemeentesVlaanderen, setStateGeojsonGemeentesVlaanderen] = useState(geojsonGemeentesVlaanderen);
   const [stateGeojsonProvinciesVlaanderen, setStateGeojsonProvinciesVlaanderen] = useState(geojsonProvinciesVlaanderen);
   const [testCsv, setTestCsv] = useState([]);
-  const [testCsvProvincies, setTestCsvProvincies] = useState([]);
+  const [testCsvProvincies, setTestCsvProvincies] = useState();
   const [testCsvArrondissementen, setTestCsvArrondissementen] = useState([]);
   const [viewport, setViewport] = useState({
     latitude: 50.616949,
@@ -165,15 +166,52 @@ function App() {
     return geo;
   }
 
-  useEffect(() => {
-    const activeYearsArrondissementen = testCsvArrondissementen.filter((item) => item.jaar === Number(year));
+  const updateMunicipalitiesByYear = (year) => {
     const activeYearsGemeentes = testCsv.filter((item) => item.year === Number(year));
-    const activeYearsProvincies = testCsvProvincies.filter((item) => item.jaar === Number(year));
-    setStateGeojsonArrondissementenVlaanderen(mergeArrondissementen(geojsonArrondissementenVlaanderen, activeYearsArrondissementen));
-    setStateGeojsonGemeentesVlaanderen(mergeGemeentes(geojsonGemeentesVlaanderen, activeYearsGemeentes));
-    setStateGeojsonProvinciesVlaanderen(mergeProvincies(geojsonProvinciesVlaanderen, activeYearsProvincies));
+    mapRef.current?.getSource('municipalities')?.setData(mergeGemeentes(geojsonGemeentesVlaanderen, activeYearsGemeentes));
+  }
 
-  }, [ testCsvArrondissementen, testCsv, testCsvProvincies])
+  const updateArrondissementenByYear = (year) => {
+    const activeYearsArrondissementen = testCsvArrondissementen.filter((item) => item.jaar === Number(year));
+    mapRef.current?.getSource('arrondissementen')?.setData(mergeArrondissementen(geojsonArrondissementenVlaanderen, activeYearsArrondissementen));
+  }
+
+  const updateProvinciesByYear = (year) => {
+    const activeYearsProvincies = testCsvProvincies.filter((item) => item.jaar === Number(year));
+    console.log(activeYearsProvincies);
+    mapRef.current?.getSource('provincies')?.setData(mergeProvincies(geojsonProvinciesVlaanderen, activeYearsProvincies));
+  }
+
+  const updateYearDebounce = useDebouncedCallback(year => {
+    updateMunicipalitiesByYear(year);
+    updateArrondissementenByYear(year);
+    updateProvinciesByYear(year);
+  }, 1000);
+
+  useEffect(() => {
+    if (!mapRef.current) {
+      return;
+    }
+    const mapZoomLvl = mapRef.current.getZoom();
+    updateYearDebounce(year);
+    if (mapZoomLvl >= 10) {
+      updateMunicipalitiesByYear(year);
+    }
+    else if (mapZoomLvl >= 8 && mapZoomLvl < 10) {
+      const activeYearsArrondissementen = testCsvArrondissementen.filter((item) => item.jaar === Number(year));
+      mapRef.current?.getSource('arrondissementen')?.setData(mergeArrondissementen(geojsonArrondissementenVlaanderen, activeYearsArrondissementen));
+    }
+    else {
+      const activeYearsProvincies = testCsvProvincies.filter((item) => item.jaar === Number(year));
+      mapRef.current?.getSource('provincies')?.setData(mergeProvincies(geojsonProvinciesVlaanderen, activeYearsProvincies));
+    }
+  }, [year, testCsvArrondissementen, testCsvProvincies, testCsv, updateYearDebounce])
+
+  useEffect(() => {
+    if (testCsvProvincies) {
+      updateProvinciesByYear(year);
+    }
+  }, [testCsvProvincies])
 
   useEffect(() => {
     const loadData = async () => {
@@ -202,14 +240,16 @@ function App() {
       <Map ref={mapRef}
 
         interactiveLayerIds={[
-          // "provincies",
-          // "arrondissementen",
-          // "mediaan prijs"
+          `arrondissementen`,
+          'municipalities',
+          'provincies'
         ]
         }
         onLoad={
           () => {
-
+            updateMunicipalitiesByYear(year);
+            updateArrondissementenByYear(year);
+            updateProvinciesByYear(year);
           }
         }
         {...viewport}
@@ -227,18 +267,18 @@ function App() {
       >
         {hoverInfo && (
           <div className="tooltip">
-            <div><span>{hoverInfo.feature.properties.NAAM}</span></div>
+            <div><span>{hoverInfo.feature.properties.mediaan1}</span></div>
           </div>
         )}
 
         <Legend legendItems={legendItemsLayer} title={'Mediaan prijs (€)'} />
 
-        <Source id='mediaan prijs' type='geojson' data={stateGeojsonGemeentesVlaanderen}>
+        <Source key={`municipalities`} id={`municipalities`} type='geojson' data={stateGeojsonGemeentesVlaanderen}>
           <Layer
             {
             ...{
-              'id': 'mediaan prijs',
-              'source': 'mediaan prijs',
+              'id': `municipalities`,
+              'source': `municipalities`,
               'minzoom': 10,
               'type': 'fill',
 
@@ -288,13 +328,13 @@ function App() {
             }}></Layer>
         </Source>
 
-        <Source id={'arrondissementen'} type='geojson' data={stateGeojsonArrondissementenVlaanderen}>
+        <Source key={`arrondissementen`} id={`arrondissementen`} type='geojson' data={stateGeojsonArrondissementenVlaanderen}>
           <Layer {
             ...{
-              'id': 'arrondissementen',
-              'source': 'arrondissementen',
+              'id': `arrondissementen`,
+              'source': `arrondissementen`,
               'minzoom': 8,
-              'maxzoom': 10,
+              'maxzoom': 10.2,
               'type': 'fill',
 
               'paint': {
@@ -345,13 +385,13 @@ function App() {
 
         </Source>
 
-        <Source id='provincies' type='geojson' data={stateGeojsonProvinciesVlaanderen}>
+        <Source key={`provincies`} id={`provincies`} type='geojson' data={stateGeojsonProvinciesVlaanderen}>
           <Layer {
 
             ...{
-              'id': 'provincies',
-              'source': 'provincies',
-              'maxzoom': 8,
+              'id': `provincies`,
+              'source': `provincies`,
+              'maxzoom': 8.2,
               'type': 'fill',
 
               'paint': {
@@ -364,19 +404,19 @@ function App() {
                   183,
                   '#EED322',
                   184.99,
-                  '#E6B71E',
+                  '#FF0000',
                   214,
                   '#DA9C20',
                   241,
                   '#CA8323',
-                  600000,
-                  '#B86B25',
-                  610000,
-                  '#A25626',
-                  700000,
-                  '#8B4225',
-                  10000000000,
-                  '#A0A0A0'
+                  // 600000,
+                  // '#B86B25',
+                  // 610000,
+                  // '#A25626',
+                  // 700000,
+                  // '#8B4225',
+                  // 10000000000,
+                  // '#A0A0A0'
                 ],
                 'fill-opacity': 0.75
               }
@@ -386,9 +426,10 @@ function App() {
             {
             ...
             {
+
               'id': 'outline3',
               'type': 'line',
-              'source': 'mediaan prijs',
+              'source': 'provincies',
               'maxzoom': 8,
               'layout': {},
               'paint': {
@@ -400,8 +441,6 @@ function App() {
         </Source>
 
       </Map>
-
-      <button onClick={() => setYear(2015)}>2015</button>
 
       <ControlPanel year={year} onChange={value => setYear(value)} />
     </>
