@@ -26,9 +26,6 @@ function App() {
   const [hoverInfo, setHoverInfo] = useState(null);
   const [year, setYear] = useState(2010);
   const [zoomLvl, setZoomLvl] = useState(6);
-  const [stateGeojsonArrondissementenVlaanderen, setStateGeojsonArrondissementenVlaanderen] = useState(geojsonArrondissementenVlaanderen);
-  const [stateGeojsonGemeentesVlaanderen, setStateGeojsonGemeentesVlaanderen] = useState(geojsonGemeentesVlaanderen);
-  const [stateGeojsonProvinciesVlaanderen, setStateGeojsonProvinciesVlaanderen] = useState(geojsonProvinciesVlaanderen);
   const [testCsv, setTestCsv] = useState();
   const [testCsvProvincies, setTestCsvProvincies] = useState();
   const [testCsvArrondissementen, setTestCsvArrondissementen] = useState();
@@ -120,12 +117,6 @@ function App() {
   }, [year, testCsvArrondissementen, testCsvProvincies, testCsv, updateYearDebounce])
 
   useEffect(() => {
-    if (testCsvProvincies) {
-      updateProvinciesByYear(year);
-    }
-  }, [testCsvProvincies, laagsteMediaanGemeentes])
-
-  useEffect(() => {
     const loadData = async () => {
       const csv = await axios.get("http://localhost:3000/NL_immo_jaar_v2.csv");
       const csvProvincies = await axios.get("http://localhost:3000/csvProvincies.csv");
@@ -209,7 +200,7 @@ function App() {
 
         <Legend legendItems={ranges.rangeItems} title={'Mediaan prijs (€)'} />
 
-        <Source key={`municipalities`} id={`municipalities`} type='geojson' data={stateGeojsonGemeentesVlaanderen}>
+        <Source key={`municipalities`} id={`municipalities`} type='geojson' data={geojsonGemeentesVlaanderen}>
           <Layer
             {
             ...{
@@ -261,7 +252,7 @@ function App() {
           }></Layer>
         </Source>
 
-        <Source key={`arrondissementen`} id={`arrondissementen`} type='geojson' data={stateGeojsonArrondissementenVlaanderen}>
+        <Source key={`arrondissementen`} id={`arrondissementen`} type='geojson' data={geojsonArrondissementenVlaanderen}>
           <Layer {
             ...{
               'id': `arrondissementen`,
@@ -301,7 +292,7 @@ function App() {
 
         </Source>
 
-        <Source key={`provincies`} id={`provincies`} type='geojson' data={stateGeojsonProvinciesVlaanderen}>
+        <Source key={`provincies`} id={`provincies`} type='geojson' data={geojsonProvinciesVlaanderen}>
           <Layer {
 
             ...{
