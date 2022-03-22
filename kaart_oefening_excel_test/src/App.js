@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Map, { Source, Layer } from 'react-map-gl';
 import papa from 'papaparse'
 import './index.css';
@@ -10,125 +9,34 @@ import geojsonArrondissementenVlaanderen from './ArrondissementenVlaanderen.json
 import ControlPanel from './control-panel';
 import { Legend } from './components/Legend.js';
 import { useDebouncedCallback } from "use-debounce";
+import { formatNumber } from "./utils/math";
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYmFyYmFyb3NzbyIsImEiOiJja3ptd2Zlb3AwMDIyMm9xb3B3bjhqYjJiIn0.R0SXEE12p1SX1UbF7wqZ7g';
-const legendItemsGemeentes = [
-  {
-    label: "Niet geweten",
-    bgColor: "#3C3A38",
-  },
-  {
-    label: "Undefined",
-    bgColor: "#A0A0A0",
-  },
-  {
-    label: "700000",
-    bgColor: "#8B4225",
-  },
-  {
-    label: "600000",
-    bgColor: "#A25626",
-  },
-  {
-    label: "500000",
-    bgColor: "#B86B25",
-  },
-  {
-    label: "400000",
-    bgColor: "#CA8323",
-  },
-  {
-    label: "300000",
-    bgColor: "#DA9C20",
-  },
-  {
-    label: "200000",
-    bgColor: "#E6B71E",
-  },
-  {
-    label: "100000",
-    bgColor: "#EED322",
-  },
-  {
-    label: "0",
-    bgColor: "#F2F12D",
-  },
+
+const rangeColors = [
+  '#F2F12D',
+  '#EED322',
+  '#E6B71E',
+  '#DA9C20',
+  '#CA8323'
 ]
-const legendItemsArrondissementen = [
-  {
-    label: "Niet geweten",
-    bgColor: "#3C3A38",
-  },
-  {
-    label: "Undefined",
-    bgColor: "#A0A0A0",
-  },
-  {
-    label: "241",
-    bgColor: "#CA8323",
-  },
-  {
-    label: "214",
-    bgColor: "#DA9C20",
-  },
-  {
-    label: "184.99",
-    bgColor: "#E6B71E",
-  },
-  {
-    label: "183",
-    bgColor: "#EED322",
-  },
-  {
-    label: "179",
-    bgColor: "#F2F12D",
-  },
-]
-const legendItemsProvincies = [
-  {
-    label: "Niet geweten",
-    bgColor: "#3C3A38",
-  },
-  {
-    label: "Undefined",
-    bgColor: "#A0A0A0",
-  },
-  {
-    label: "241",
-    bgColor: "#CA8323",
-  },
-  {
-    label: "214",
-    bgColor: "#DA9C20",
-  },
-  {
-    label: "184.99",
-    bgColor: "#E6B71E",
-  },
-  {
-    label: "183",
-    bgColor: "#EED322",
-  },
-  {
-    label: "179",
-    bgColor: "#F2F12D",
-  },
-]
+
 function App() {
   const mapRef = React.useRef();
   const [hoverInfo, setHoverInfo] = useState(null);
   const [year, setYear] = useState(2010);
-  const [legendItemsLayer, setLegendItemsLayer] = useState(legendItemsProvincies);
+  const [zoomLvl, setZoomLvl] = useState(6);
   const [stateGeojsonArrondissementenVlaanderen, setStateGeojsonArrondissementenVlaanderen] = useState(geojsonArrondissementenVlaanderen);
   const [stateGeojsonGemeentesVlaanderen, setStateGeojsonGemeentesVlaanderen] = useState(geojsonGemeentesVlaanderen);
   const [stateGeojsonProvinciesVlaanderen, setStateGeojsonProvinciesVlaanderen] = useState(geojsonProvinciesVlaanderen);
-  const [testCsv, setTestCsv] = useState([]);
+  const [testCsv, setTestCsv] = useState();
   const [testCsvProvincies, setTestCsvProvincies] = useState();
-  const [testCsvArrondissementen, setTestCsvArrondissementen] = useState([]);
+  const [testCsvArrondissementen, setTestCsvArrondissementen] = useState();
+  const [laagsteMediaanGemeentes, setLaagsteMediaanGemeentes] = useState();
   const [viewport, setViewport] = useState({
     latitude: 50.616949,
     longitude: 4.885260,
-    zoom: 6,
+    zoom: zoomLvl,
   });
   const options = {
     delimiter: ';', header: true, dynamicTyping: true, complete: function (results, file) {
@@ -136,29 +44,32 @@ function App() {
     }
   };
 
-  const mergeProvincies = (geo, csv) => {
-    for (const province of geo.features) {
-      const ObjectProvinceCsv = csv.find(element => element?.provincie?.split?.(' ')[1].toUpperCase() === province.properties.NAAM.toUpperCase());
-      if (ObjectProvinceCsv) {
-        province.properties.mediaan1 = ObjectProvinceCsv.mediaan1;
+  const geefMedianen = (geo, csv, key) => {
+    if (!csv) {
+      return [0, 0];
+    }
+    let laagsteMediaan = csv[0].mediaan1;
+    let hoogsteMediaan = csv[0].mediaan1;
+    for (const element of csv) {
+      if (activeLocation(geo, element, key)) {
+        if (element.mediaan1 < laagsteMediaan && element.mediaan1 !== null && element.mediaan1 !== undefined) {
+          laagsteMediaan = element.mediaan1;
+        }
+        else if (element.mediaan1 > hoogsteMediaan && element.mediaan1 !== null && element.mediaan1 !== undefined) {
+          hoogsteMediaan = element.mediaan1;
+        }
       }
     }
-    return geo;
+    return [laagsteMediaan, hoogsteMediaan];
   }
 
-  const mergeArrondissementen = (geo, csv) => {
-    for (const arrondissement of geo.features) {
-      const ObjectArrondissementCsv = csv.find(element => element?.Arrondissement?.split?.(' ')[1].toUpperCase() === arrondissement.properties.NAAM.toUpperCase());
-      if (ObjectArrondissementCsv) {
-        arrondissement.properties.mediaan1 = ObjectArrondissementCsv.mediaan1;
-      }
-    }
-    return geo;
+  const activeLocation = (geo, csvRow, key) => {
+    return geo.features.find(feature => csvRow?.[key]?.split?.(' ')[key === 'municipality' ? 0 : 1].toUpperCase() === feature.properties.NAAM.toUpperCase())
   }
 
-  const mergeGemeentes = (geo, csv) => {
+  const mergeGeojson = (geo, csv, key) => {
     for (const gemeente of geo.features) {
-      const ObjectGemeenteCsv = csv.find(element => element?.municipality?.split?.(' ')[0].toUpperCase() === gemeente.properties.NAAM.toUpperCase());
+      const ObjectGemeenteCsv = csv.find(element => element?.[key]?.split?.(' ')[key === 'municipality' ? 0 : 1].toUpperCase() === gemeente.properties.NAAM.toUpperCase());
       if (ObjectGemeenteCsv) {
         gemeente.properties.mediaan1 = ObjectGemeenteCsv.mediaan1;
       }
@@ -168,18 +79,17 @@ function App() {
 
   const updateMunicipalitiesByYear = (year) => {
     const activeYearsGemeentes = testCsv.filter((item) => item.year === Number(year));
-    mapRef.current?.getSource('municipalities')?.setData(mergeGemeentes(geojsonGemeentesVlaanderen, activeYearsGemeentes));
+    mapRef.current?.getSource('municipalities')?.setData(mergeGeojson(geojsonGemeentesVlaanderen, activeYearsGemeentes, 'municipality'));
   }
 
   const updateArrondissementenByYear = (year) => {
     const activeYearsArrondissementen = testCsvArrondissementen.filter((item) => item.jaar === Number(year));
-    mapRef.current?.getSource('arrondissementen')?.setData(mergeArrondissementen(geojsonArrondissementenVlaanderen, activeYearsArrondissementen));
+    mapRef.current?.getSource('arrondissementen')?.setData(mergeGeojson(geojsonArrondissementenVlaanderen, activeYearsArrondissementen, 'Arrondissement'));
   }
 
   const updateProvinciesByYear = (year) => {
     const activeYearsProvincies = testCsvProvincies.filter((item) => item.jaar === Number(year));
-    console.log(activeYearsProvincies);
-    mapRef.current?.getSource('provincies')?.setData(mergeProvincies(geojsonProvinciesVlaanderen, activeYearsProvincies));
+    mapRef.current?.getSource('provincies')?.setData(mergeGeojson(geojsonProvinciesVlaanderen, activeYearsProvincies, 'provincie'));
   }
 
   const updateYearDebounce = useDebouncedCallback(year => {
@@ -199,19 +109,21 @@ function App() {
     }
     else if (mapZoomLvl >= 8 && mapZoomLvl < 10) {
       const activeYearsArrondissementen = testCsvArrondissementen.filter((item) => item.jaar === Number(year));
-      mapRef.current?.getSource('arrondissementen')?.setData(mergeArrondissementen(geojsonArrondissementenVlaanderen, activeYearsArrondissementen));
+      mapRef.current?.getSource('arrondissementen')?.setData(mergeGeojson(geojsonArrondissementenVlaanderen, activeYearsArrondissementen, 'Arrondissement'));
     }
     else {
       const activeYearsProvincies = testCsvProvincies.filter((item) => item.jaar === Number(year));
-      mapRef.current?.getSource('provincies')?.setData(mergeProvincies(geojsonProvinciesVlaanderen, activeYearsProvincies));
+      mapRef.current?.getSource('provincies')?.setData(mergeGeojson(geojsonProvinciesVlaanderen, activeYearsProvincies, 'provincie'));
     }
+    // console.log("Laagste mediaan = ", geefMedianen(testCsvProvincies)[0]);
+    // console.log("Hoogste mediaan = ", geefMedianen(testCsvProvincies)[1]);
   }, [year, testCsvArrondissementen, testCsvProvincies, testCsv, updateYearDebounce])
 
   useEffect(() => {
     if (testCsvProvincies) {
       updateProvinciesByYear(year);
     }
-  }, [testCsvProvincies])
+  }, [testCsvProvincies, laagsteMediaanGemeentes])
 
   useEffect(() => {
     const loadData = async () => {
@@ -235,6 +147,33 @@ function App() {
     setHoverInfo(hoveredFeature && { feature: hoveredFeature, x, y });
   }, []);
 
+  const ranges = useMemo(() => {
+    let csv = testCsvProvincies;
+    let geo = geojsonProvinciesVlaanderen;
+    let key = 'provincie';
+    if (zoomLvl > 10) {
+      csv = testCsv;
+      geo = geojsonGemeentesVlaanderen;
+      key = 'municipality';
+    }
+    else if (zoomLvl > 8 && zoomLvl < 11) {
+      csv = testCsvArrondissementen;
+      geo = geojsonArrondissementenVlaanderen;
+      key = 'Arrondissement';
+    }
+    const [laagste, hoogste] = geefMedianen(geo, csv, key);
+    const range = (hoogste - laagste) / rangeColors.length;
+    const rangeItems = rangeColors.map((color, index) => {
+      const currentRange = laagste + index * range
+      return { bgColor: color, label: `${formatNumber(currentRange)} - ${formatNumber(currentRange + range)}`, range: currentRange }
+    });
+
+    const layerColors = rangeItems.reduce((acc, item) => {
+      return [...acc, item.range, item.bgColor]
+    }, [])
+    return { layerColors, rangeItems }
+  }, [zoomLvl, testCsvProvincies, testCsv, testCsvArrondissementen])
+
   return (
     <>
       <Map ref={mapRef}
@@ -254,24 +193,21 @@ function App() {
         }
         {...viewport}
         onMove={evt => setViewport(evt.viewport)}
+        onZoom={e => setZoomLvl(e.viewState.zoom)}
         style={{ width: 1519, height: 721 }}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
         onMouseMove={onHover}
         onMouseLeave={() => setHoverInfo(null)}
-        onZoom={() => {
-          if (mapRef.current.getZoom() > 10) { setLegendItemsLayer(legendItemsGemeentes) }
-          else if (mapRef.current.getZoom() > 8 && mapRef.current.getZoom() < 11) { setLegendItemsLayer(legendItemsArrondissementen) }
-          else { setLegendItemsLayer(legendItemsProvincies) }
-        }}
       >
         {hoverInfo && (
           <div className="tooltip">
-            <div><span>{hoverInfo.feature.properties.mediaan1}</span></div>
+            <div><span>Naam: {hoverInfo.feature.properties.NAAM}</span></div>
+            <div><span>Mediaan: {hoverInfo.feature.properties.mediaan1}</span></div>
           </div>
         )}
 
-        <Legend legendItems={legendItemsLayer} title={'Mediaan prijs (€)'} />
+        <Legend legendItems={ranges.rangeItems} title={'Mediaan prijs (€)'} />
 
         <Source key={`municipalities`} id={`municipalities`} type='geojson' data={stateGeojsonGemeentesVlaanderen}>
           <Layer
@@ -287,24 +223,7 @@ function App() {
                   'interpolate',
                   ['linear'],
                   ['get', 'mediaan1'],
-                  0,
-                  '#F2F12D',
-                  100000,
-                  '#EED322',
-                  200000,
-                  '#E6B71E',
-                  300000,
-                  '#DA9C20',
-                  400000,
-                  '#CA8323',
-                  500000,
-                  '#B86B25',
-                  600000,
-                  '#A25626',
-                  700000,
-                  '#8B4225',
-                  10000000000,
-                  '#A0A0A0'
+                  ...ranges.layerColors,
                 ],
                 'fill-opacity': 0.75
               }
@@ -326,6 +245,20 @@ function App() {
               }
 
             }}></Layer>
+          <Layer {
+            ...{
+              'id': 'label',
+              'source': 'municipalities',
+              'type': 'symbol',
+              'layout': {
+                'text-field': ['get', 'mediaan1'],
+                'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+                'text-radial-offset': 0.5,
+                'text-size': 15,
+                'text-anchor': 'center'
+              }
+            }
+          }></Layer>
         </Source>
 
         <Source key={`arrondissementen`} id={`arrondissementen`} type='geojson' data={stateGeojsonArrondissementenVlaanderen}>
@@ -342,24 +275,7 @@ function App() {
                   'interpolate',
                   ['linear'],
                   ['get', 'mediaan1'],
-                  179,
-                  '#FF0000',
-                  183,
-                  '#00FF00',
-                  184.99,
-                  '#0000FF',
-                  214,
-                  '#FFFF00',
-                  241,
-                  '#CA8323',
-                  600000,
-                  '#B86B25',
-                  610000,
-                  '#A25626',
-                  700000,
-                  '#8B4225',
-                  10000000000,
-                  '#A0A0A0'
+                  ...ranges.layerColors,
                 ],
                 'fill-opacity': 0.75
               }
@@ -399,24 +315,7 @@ function App() {
                   'interpolate',
                   ['linear'],
                   ['get', 'mediaan1'],
-                  179,
-                  '#F2F12D',
-                  183,
-                  '#EED322',
-                  184.99,
-                  '#FF0000',
-                  214,
-                  '#DA9C20',
-                  241,
-                  '#CA8323',
-                  // 600000,
-                  // '#B86B25',
-                  // 610000,
-                  // '#A25626',
-                  // 700000,
-                  // '#8B4225',
-                  // 10000000000,
-                  // '#A0A0A0'
+                  ...ranges.layerColors,
                 ],
                 'fill-opacity': 0.75
               }

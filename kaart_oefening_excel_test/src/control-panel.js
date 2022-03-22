@@ -15,7 +15,6 @@ function ControlPanel({ year, onChange }) {
           max={2020}
           step={1}
           onChange={evt => {
-            console.log(Number(evt.target.value));
             onChange(Number(evt.target.value))
           }}
         />
