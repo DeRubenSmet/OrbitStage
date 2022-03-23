@@ -1,0 +1,21 @@
+function ControlPanel({ year, onChange }: { year: number | string; onChange: (e: number) => void }) {
+  return (
+    <div className="control-panel">
+      <div key={'year'} className="input">
+        <label>Year</label> <span>{year}</span>
+        <input
+          type="range"
+          value={year}
+          min={2010}
+          max={2020}
+          step={1}
+          onChange={(evt) => {
+            onChange(Number(evt.target.value));
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+export default ControlPanel;
