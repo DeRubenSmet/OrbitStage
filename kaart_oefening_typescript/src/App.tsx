@@ -15,7 +15,6 @@ const MAPBOX_TOKEN = 'pk.eyJ1IjoiYmFyYmFyb3NzbyIsImEiOiJja3ptd2Zlb3AwMDIyMm9xb3B
 const rangeColors = ['#feb24c', '#fd8d3c', '#fc4e2a', '#e31a1c', '#b10026'];
 
 interface CsvRow {
-  year?: number;
   jaar?: number;
   mediaan1: number;
   naam: string;
@@ -50,7 +49,7 @@ function App() {
 
   const updateLayerByYear = (jaartal: number | string, dataLayer: DataLayer) => {
     const csvFilteredRows = dataLayer.csv.filter(
-      (item) => item[dataLayer.id === 'gemeentes' ? 'year' : 'jaar'] === Number(jaartal)
+      (item) => item.jaar === Number(jaartal)
     );
     const geoJson = getMergedGeojson(dataLayer.geoJson, csvFilteredRows, dataLayer.key);
     console.log(geoJson);

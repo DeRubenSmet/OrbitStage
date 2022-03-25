@@ -18,7 +18,7 @@ const options = {
 
 const getFilteredData = (
   geo: GeoJSON.FeatureCollection<GeoJSON.Geometry>,
-  csv: { mediaan1: number }[],
+  csv: {jaar: number, year: number, mediaan1: number }[],
   key: string
 ): object[] => {
   return csv
@@ -34,19 +34,9 @@ const getFilteredData = (
         ...row,
         mediaan1: key !== 'municipality' ? row.mediaan1 * 1000 : row.mediaan1,
         naam: row?.[key]?.split?.(' ')[key === 'municipality' ? 0 : 1].toUpperCase(),
+        jaar: row?.jaar || row?.year
       };
     });
-
-  // for (const gemeente of geo.features) {
-  //   const ObjectGemeenteCsv = csv.find(
-  //     (element) =>
-  //       element?.[key]?.split?.(' ')[key === 'municipality' ? 0 : 1].toUpperCase() ===
-  //       gemeente.properties.NAAM.toUpperCase()
-  //   );
-  //   if (ObjectGemeenteCsv) {
-  //     gemeente.properties.mediaan1 = ObjectGemeenteCsv.mediaan1;
-  //   }
-  // }
 };
 
 const createDatalayers = () => {
