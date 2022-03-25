@@ -16,13 +16,18 @@ const options = {
   },
 };
 
-const getFilteredData = (geo: GeoJSON.FeatureCollection<GeoJSON.Geometry>, csv: object[], key: string): object[] => {
-  return csv.filter((row) => {
-    return geo.features.find(
-      (feature) =>
-        row?.[key]?.split?.(' ')[key === 'municipality' ? 0 : 1].toUpperCase() === feature.properties.NAAM.toUpperCase()
-    );
-  });
+const getFilteredData = (geo: GeoJSON.FeatureCollection<GeoJSON.Geometry>, csv: {mediaan1: number}[], key: string): object[] => {
+  return csv
+    .filter((row) => {
+      return geo.features.find(
+        (feature) =>
+          row?.[key]?.split?.(' ')[key === 'municipality' ? 0 : 1].toUpperCase() ===
+          feature.properties.NAAM.toUpperCase()
+      );
+    })
+    .map((row) => {
+      return { ...row, mediaan1: key !== 'municipality' ? row.mediaan1 * 1000 : row.mediaan1, naam: row?.[key]?.split?.(' ')[key === 'municipality' ? 0 : 1].toUpperCase()};
+    });
 
   // for (const gemeente of geo.features) {
   //   const ObjectGemeenteCsv = csv.find(

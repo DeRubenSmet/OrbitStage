@@ -9,15 +9,25 @@ import dataLayers from './result.json';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { Feature } from 'geojson';
+import numeral from 'numeral';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYmFyYmFyb3NzbyIsImEiOiJja3ptd2Zlb3AwMDIyMm9xb3B3bjhqYjJiIn0.R0SXEE12p1SX1UbF7wqZ7g';
 
-const rangeColors = ['#F2F12D', '#EED322', '#E6B71E', '#DA9C20', '#CA8323'];
+const rangeColors = ['#feb24c', '#fd8d3c', '#fc4e2a', '#e31a1c', '#b10026'];
+
+
+
+interface CsvRow {
+  year?: number;
+  jaar?: number;
+  mediaan1: number;
+  naam: string;
+}
 
 interface DataLayer {
   id: string;
   key: string;
-  csv: { year?: number; jaar?: number; mediaan1: number }[];
+  csv: CsvRow[];
   geoJson: GeoJSON.FeatureCollection<GeoJSON.Geometry>;
   minZoom: number;
   maxZoom: number;
@@ -71,7 +81,7 @@ function App() {
     }
   }, [zoom, activeLayer]);
 
-  const getMediaanRange = (csv: { mediaan1?: number }[]) => {
+  const getMediaanRange = (csv: CsvRow[]) => {
     const min = csv.reduce((acc, row) => Math.min(row.mediaan1 ?? Number.MAX_VALUE, acc), Number.MAX_VALUE);
     const max = csv.reduce((acc, row) => Math.max(row.mediaan1 ?? 0, acc), 0);
     return [min, max];
@@ -79,24 +89,23 @@ function App() {
 
   const getMergedGeojson = (
     geoJson: GeoJSON.FeatureCollection<GeoJSON.Geometry>,
-    csv: object[],
+    csv: CsvRow[],
     key: string
   ): GeoJSON.FeatureCollection<GeoJSON.Geometry> => {
     return {
       ...geoJson,
-      features: geoJson.features.map((feature) => ({
-        ...feature,
-        properties: {
-          ...feature.properties,
-          mediaan1: csv.find(
-            (element) =>
-              //@ts-ignore
-              element?.[key]?.split?.(' ')[key === 'municipality' ? 0 : 1].toUpperCase() ===
-              feature.properties?.NAAM.toUpperCase()
-            //@ts-ignore
-          )?.mediaan1,
-        },
-      })),
+      features: geoJson.features.map((feature) => {
+        const row: CsvRow | undefined = csv.find((element) => element?.naam === feature.properties?.NAAM.toUpperCase())
+        return {
+          ...feature,
+          properties: {
+            ...feature.properties,
+            mediaanFormatted: formatNumber(row?.mediaan1),
+            mediaan1:
+              row?.mediaan1 ?? 'noMediaan',
+          },
+        };
+      }),
     };
   };
 
@@ -166,13 +175,14 @@ function App() {
             <Layer
               {...{
                 type: 'fill',
-                id: sourceLayer.id,
+                id: `${sourceLayer.id}`,
                 source: sourceLayer.id,
                 minzoom: sourceLayer.minZoom,
                 maxzoom: sourceLayer.maxZoom + 0.2,
+                filter: ['!=', 'mediaan1', 'noMediaan'],
                 paint: {
                   'fill-color': ['interpolate', ['linear'], ['get', 'mediaan1'], ...ranges.layerColors],
-                  'fill-opacity': 0.75,
+                  'fill-opacity': 1,
                 },
               }}
             ></Layer>
@@ -187,6 +197,20 @@ function App() {
                 paint: {
                   'line-color': '#000',
                   'line-width': 2,
+                },
+              }}
+            ></Layer>
+            <Layer
+              {...{
+                id: `${sourceLayer.id}-symbol`,
+                type: 'symbol',
+                source: sourceLayer.id,
+                minzoom: sourceLayer.minZoom,
+                maxzoom: sourceLayer.maxZoom + 0.2,
+                filter: ['!=', 'mediaan1', 'noMediaan'],
+                layout: {
+                  'text-field': ['concat', ['get', 'NAAM'], '\n', ['get', 'mediaanFormatted']],
+                  'symbol-placement': 'point',
                 },
               }}
             ></Layer>
