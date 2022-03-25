@@ -9,13 +9,10 @@ import dataLayers from './result.json';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { Feature } from 'geojson';
-import numeral from 'numeral';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYmFyYmFyb3NzbyIsImEiOiJja3ptd2Zlb3AwMDIyMm9xb3B3bjhqYjJiIn0.R0SXEE12p1SX1UbF7wqZ7g';
 
 const rangeColors = ['#feb24c', '#fd8d3c', '#fc4e2a', '#e31a1c', '#b10026'];
-
-
 
 interface CsvRow {
   year?: number;
@@ -39,7 +36,7 @@ function App() {
   const [year, setYear] = useState<number>(2010);
   const [hoverInfo, setHoverInfo] = useState<Feature | null>(null);
   const interactiveLayerIds = sourceLayers.map((dataLayer) => dataLayer.id);
-  const [zoom, setZoom] = useState<number>(6);
+  const [zoom, setZoom] = useState<number>(7);
   const [viewport, setViewport] = useState({
     latitude: 50.616949,
     longitude: 4.88526,
@@ -95,14 +92,13 @@ function App() {
     return {
       ...geoJson,
       features: geoJson.features.map((feature) => {
-        const row: CsvRow | undefined = csv.find((element) => element?.naam === feature.properties?.NAAM.toUpperCase())
+        const row: CsvRow | undefined = csv.find((element) => element?.naam === feature.properties?.NAAM.toUpperCase());
         return {
           ...feature,
           properties: {
             ...feature.properties,
             mediaanFormatted: formatNumber(row?.mediaan1),
-            mediaan1:
-              row?.mediaan1 ?? 'noMediaan',
+            mediaan1: row?.mediaan1 ?? 'noMediaan',
           },
         };
       }),
@@ -151,7 +147,7 @@ function App() {
         //@ts-ignore
         onMove={(evt) => setViewport(evt.viewport)}
         onZoom={(e) => setZoom(e.viewState.zoom)}
-        style={{ width: 1519, height: 721 }}
+        style={{ width: 1920, height: 900 }}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
         onMouseMove={onHover}
