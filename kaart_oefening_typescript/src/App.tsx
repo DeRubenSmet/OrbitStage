@@ -146,7 +146,8 @@ function App() {
         //@ts-ignore
         onMove={(evt) => setViewport(evt.viewport)}
         onZoom={(e) => setZoom(e.viewState.zoom)}
-        style={{ width: 1920, height: 900 }}
+        //style={{ width: 1920, height: 900 }}
+        style={{ width: 1519, height: 721 }}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
         onMouseMove={onHover}
