@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:/Users/pascalvanhecke/codetaal/orbit/research/remix-react-map-gl/app/routes/__map/$mapType.tsx?browser", "../../../../app/routes/__map/$mapType.tsx"],
+  "sourcesContent": ["export { default } from \"/Users/pascalvanhecke/codetaal/orbit/research/remix-react-map-gl/app/routes/__map/$mapType.tsx\";", "import { json, LoaderFunction, useLoaderData } from \"remix\";\nimport Map, {Source, Layer} from 'react-map-gl';\n\ntype LoaderData = Awaited<ReturnType<typeof loader>>;\n\nexport const loader: LoaderFunction = async ({\n    params,\n}) => {\n    const response = await fetch(\n        'https://raw.githubusercontent.com/uber/react-map-gl/master/examples/.data/us-income.geojson'\n      )\n    return json(response.json());\n};\n\nexport default function Test() {\n    const mapData = useLoaderData<LoaderData>();\n\n    return (\n        <>\n            <h2>Hier komt de map {mapData.type}</h2>\n        </>\n    );\n}"],
+  "mappings": ";;;;;;;AAAA;;;ACAA;AAce,gBAAgB;AAC3B,QAAM,UAAU;AAEhB,SACI,0DACI,oCAAC,MAAD,MAAI,qBAAkB,QAAQ;AAAA;",
+  "names": []
+}

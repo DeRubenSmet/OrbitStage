@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:/Users/pascalvanhecke/codetaal/orbit/research/remix-react-map-gl/app/routes/$type.tsx?browser", "../../../app/routes/$type.tsx"],
+  "sourcesContent": ["export { default } from \"/Users/pascalvanhecke/codetaal/orbit/research/remix-react-map-gl/app/routes/$type.tsx\";", "import { json, Outlet, useLoaderData } from \"remix\";\n\nexport const loader = async () => {\n    return json({\n        posts: [\n            {\n                slug: \"my-first-post\",\n                title: \"My First Post\",\n            },\n            {\n                slug: \"90s-mixtape\",\n                title: \"A Mixtape I Made Just For You\",\n            },\n        ],\n    });\n};\n\nexport default function Posts() {\n    const { posts } = useLoaderData();\n    return (\n        <main>\n            <h1>Posts</h1>\n            <Outlet />\n        </main>\n    );\n}"],
+  "mappings": ";;;;;;;;;;AAAA;;;ACAA;AAiBe,iBAAiB;AAC5B,QAAM,EAAE,UAAU;AAClB,SACI,oCAAC,QAAD,MACI,oCAAC,MAAD,MAAI,UACJ,oCAAC,QAAD;AAAA;",
+  "names": []
+}

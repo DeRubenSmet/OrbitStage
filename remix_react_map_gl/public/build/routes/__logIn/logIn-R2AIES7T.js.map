@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:C:\\Users\\Ruben\\OneDrive\\Bureaublad\\OrbitStage2022\\OrbitStage\\remix_react_map_gl\\app\\routes\\__logIn\\logIn.tsx?browser", "../../../../app/routes/__logIn/logIn.tsx"],
+  "sourcesContent": ["export { default } from \"C:\\\\Users\\\\Ruben\\\\OneDrive\\\\Bureaublad\\\\OrbitStage2022\\\\OrbitStage\\\\remix_react_map_gl\\\\app\\\\routes\\\\__logIn\\\\logIn.tsx\";", "\r\nexport default function Test() {\r\n\r\n  return (\r\n    <>\r\n      <h2>Hier komt de logIn</h2>\r\n\r\n    </>\r\n  );\r\n}\r\n"],
+  "mappings": ";;;;;;AAAA;;;ACAA;AACe,gBAAgB;AAE7B,SACE,0DACE,oCAAC,MAAD,MAAI;AAAA;",
+  "names": []
+}

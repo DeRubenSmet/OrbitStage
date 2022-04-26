@@ -83,26 +83,27 @@ function App() {
     return [min, max];
   };
 
-  const getMergedGeojson = (
-    geoJson: GeoJSON.FeatureCollection<GeoJSON.Geometry>,
-    csv: CsvRow[],
-    key: string
-  ): GeoJSON.FeatureCollection<GeoJSON.Geometry> => {
-    return {
-      ...geoJson,
-      features: geoJson.features.map((feature) => {
-        const row: CsvRow | undefined = csv.find((element) => element?.naam === feature.properties?.NAAM.toUpperCase());
-        return {
-          ...feature,
-          properties: {
-            ...feature.properties,
-            mediaanFormatted: formatNumber(row?.mediaan1),
-            mediaan1: row?.mediaan1 ?? 'noMediaan',
-          },
-        };
-      }),
+    const getMergedGeojson = (
+      geoJson: GeoJSON.FeatureCollection<GeoJSON.Geometry>,
+      csv: CsvRow[],
+      key: string
+    ): GeoJSON.FeatureCollection<GeoJSON.Geometry> => {
+      
+      return {
+        ...geoJson,
+        features: geoJson.features.map((feature) => {
+          const row: CsvRow | undefined = csv.find((element) => element?.naam === feature.properties?.NAAM.toUpperCase());
+          return {
+            ...feature,
+            properties: {
+              ...feature.properties,
+              mediaanFormatted: formatNumber(row?.mediaan1),
+              mediaan1: row?.mediaan1 ?? 'noMediaan',
+            },
+          };
+        }),
+      };
     };
-  };
 
   const onHover = useCallback((event) => {
     const {
@@ -131,7 +132,9 @@ function App() {
       (acc, item): Array<number | string> => [...acc, item.range, item.bgColor],
       []
     );
+    console.log(layerColors);
     return { layerColors, rangeItems };
+    
   }, [activeLayer]);
 
   return (
@@ -148,7 +151,8 @@ function App() {
         onZoom={(e) => setZoom(e.viewState.zoom)}
         //style={{ width: 1920, height: 900 }}
         style={{ width: 1519, height: 721 }}
-        mapStyle="mapbox://styles/mapbox/streets-v11"
+        // mapStyle="mapbox://styles/mapbox/streets-v9"
+        mapStyle="mapbox://styles/mapbox/light-v9"
         mapboxAccessToken={MAPBOX_TOKEN}
         onMouseMove={onHover}
         onMouseLeave={() => setHoverInfo(null)}

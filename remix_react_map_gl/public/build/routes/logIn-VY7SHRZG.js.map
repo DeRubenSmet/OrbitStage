@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:C:\\Users\\Ruben\\OneDrive\\Bureaublad\\OrbitStage2022\\OrbitStage\\remix_react_map_gl\\app\\routes\\logIn.tsx?browser", "../../../app/routes/logIn.tsx"],
+  "sourcesContent": ["export { default } from \"C:\\\\Users\\\\Ruben\\\\OneDrive\\\\Bureaublad\\\\OrbitStage2022\\\\OrbitStage\\\\remix_react_map_gl\\\\app\\\\routes\\\\logIn.tsx\";", "export default function Test() {\r\n  return (\r\n    <>\r\n      <form>\r\n        <label>\r\n          Name:    \r\n          <span style={{'marginRight': 30}}></span>\r\n          <input type=\"text\" name=\"name\" />\r\n        </label>\r\n        <br/>\r\n        <label className='password'>\r\n          Password:\r\n          <span style={{'marginRight': 7}}></span>\r\n          <input type=\"text\" name=\"password\" />\r\n        </label>\r\n        <input type=\"submit\" value=\"Submit\" />\r\n      </form>\r\n    </>\r\n  );\r\n}\r\n"],
+  "mappings": ";;;;;;AAAA;;;ACAA;AAAe,gBAAgB;AAC7B,SACE,0DACE,oCAAC,QAAD,MACE,oCAAC,SAAD,MAAO,SAEL,oCAAC,QAAD;AAAA,IAAM,OAAO,EAAC,eAAe;AAAA,MAC7B,oCAAC,SAAD;AAAA,IAAO,MAAK;AAAA,IAAO,MAAK;AAAA,OAE1B,oCAAC,MAAD,OACA,oCAAC,SAAD;AAAA,IAAO,WAAU;AAAA,KAAW,aAE1B,oCAAC,QAAD;AAAA,IAAM,OAAO,EAAC,eAAe;AAAA,MAC7B,oCAAC,SAAD;AAAA,IAAO,MAAK;AAAA,IAAO,MAAK;AAAA,OAE1B,oCAAC,SAAD;AAAA,IAAO,MAAK;AAAA,IAAS,OAAM;AAAA;AAAA;",
+  "names": []
+}

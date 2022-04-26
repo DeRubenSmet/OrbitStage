@@ -241,6 +241,7 @@ function App() {
     const layerColors = rangeItems.reduce((acc, item) => {
       return [...acc, item.range, item.bgColor];
     }, []);
+    console.log(layerColors);
     return { layerColors, rangeItems };
   }, [zoomLvl, testCsvProvincies, testCsv, testCsvArrondissementen]);
 

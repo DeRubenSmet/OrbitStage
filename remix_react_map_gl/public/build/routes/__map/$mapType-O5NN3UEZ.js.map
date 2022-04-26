@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:/Users/pascalvanhecke/codetaal/orbit/research/remix-react-map-gl/app/routes/__map/$mapType.tsx?browser", "../../../../app/routes/__map/$mapType.tsx"],
+  "sourcesContent": ["export { default } from \"/Users/pascalvanhecke/codetaal/orbit/research/remix-react-map-gl/app/routes/__map/$mapType.tsx\";", "\nexport default function Map() {\n  return (\n    <div>\n      <h1>Map</h1>\n    </div>\n  );\n}"],
+  "mappings": ";;;;;;AAAA;;;ACAA;AACe,eAAe;AAC5B,SACE,oCAAC,OAAD,MACE,oCAAC,MAAD,MAAI;AAAA;",
+  "names": []
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:/Users/pascalvanhecke/codetaal/orbit/research/remix-react-map-gl/app/routes/__map/test.tsx?browser"],
+  "sourcesContent": ["export * from \"/Users/pascalvanhecke/codetaal/orbit/research/remix-react-map-gl/app/routes/__map/test.tsx\";"],
+  "mappings": ";;;;;AAAA;",
+  "names": []
+}
