@@ -135,6 +135,7 @@ const TimeSlider = ({startDate, endDate, facts, onChange, debugLabels}: TimeSlid
         </div>
       </div>
       <Labels startDate={startDate} endDate={endDate}/>
+      <Labels startDate={startDate} endDate={endDate}/>
     </div>
     </div>
   );
