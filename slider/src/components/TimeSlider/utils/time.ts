@@ -1,12 +1,14 @@
 
-const getTime = (range: number, months: number, startDate: Date) => {
+const getTime = (range: number, startDate: Date, endDate: Date): Date => {
   const start = new Date(startDate);
+  const end = new Date(endDate);
     start.setMonth(start.getMonth() - 1);
     start.setDate(start.getDate() + 1);
+    end.setMonth(end.getMonth() - 1);
+    end.setDate(end.getDate() + 1);
     let dateStart = start.getTime();
-    start.setMonth(start.getMonth() + months);
-    let dateEnd = start.getTime();
-    let date = dateStart + ((dateEnd - dateStart) / 500) * range;   
+    let dateEnd = end.getTime();
+    let date = dateStart + ((dateEnd - dateStart) / 510) * range;   
     return new Date(date);
 
   };

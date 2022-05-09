@@ -1,12 +1,20 @@
+import { LinearProgress } from "@mui/material";
+import { listenerCount } from "process";
 import { useEffect, useState } from "react";
 import { Rnd } from "react-rnd";
 import Block, { getBlocks } from "./Block";
+import Labels from "./Labels";
+import SliderDates from "./SliderDates";
 
 import getTime from "./utils/time";
 
 interface TimeSliderProps {
-  count: number;
-  date: Date;
+  startDate: Date;
+  endDate: Date;
+  facts: { count: number; }[];
+  onChange?: ({startDate, endDate}: {startDate: Date, endDate: Date}) => void;
+  debugLabels?: boolean; 
+  sliderProps?: {range: number, width: number}
 }
 
 const getBlockX = (count: number, index: number) => {
@@ -14,35 +22,42 @@ const getBlockX = (count: number, index: number) => {
   return x;
 };
 
-const TimeSlider = (months: TimeSliderProps) => {
+const TimeSlider = ({startDate, endDate, facts, onChange, debugLabels}: TimeSliderProps) => {
+  // const width =  style?.width || 560;
+  const count = facts.length;
   const [state, setState] = useState({ x: 70, y: 40, width: 50, height: 60 });
   const [blocks, setBlocks] = useState(
-    getBlocks(months.count, months.date, state)
+    getBlocks(count, startDate, endDate, facts, state)
   );
   let colorBlock = "#D9D9D9";
 
   useEffect(() => {
-    setBlocks(getBlocks(months.count, months.date, state));
+    setBlocks(getBlocks(count, startDate, endDate, facts, state));
+    onChange?.({ startDate: getTime(state.x, startDate, endDate), endDate: getTime(state.x + state.width, startDate, endDate)});
   }, [state]);
 
   return (
+ <div style={{marginTop: 20, marginLeft: 20, border: "3px solid", width: 560, borderRadius: 5, //...style
+}}>
+    {debugLabels && <SliderDates {...state} startDate={startDate} endDate={endDate}/>}
     <div
       className="timeSlider"
       style={{
-        border: "1px solid",
-        height: "200px",
-        width: "900px",
+        
+        height: "170px",
+        width: "570px",
         display: "flex",
         alignItems: "center",
         justifyContent: "flex-start",
         position: "relative",
       }}
     >
+      
       <div
         className="slider"
         style={{
           width: "500px",
-          height: "150px",
+          height: "60px",
           borderRadius: "7px",
           backgroundColor: "#FFFFFF",
           display: "flex",
@@ -50,15 +65,15 @@ const TimeSlider = (months: TimeSliderProps) => {
           flexWrap: "nowrap",
           justifyContent: "space-around",
           alignItems: "flex-end",
-          marginLeft: "30px",
+          marginLeft: 10,
           position: "relative",
-          bottom: 20,
+
         }}
       >
         {blocks.map((block) => (
           <Block
             {...state}
-            {...getBlockX(months.count, block.index)}
+            {...getBlockX(count, block.index)}
             key={block.index}
             {...block}
             {...colorBlock}
@@ -66,14 +81,13 @@ const TimeSlider = (months: TimeSliderProps) => {
         ))}
         <div
           style={{
-            visibility: "visible",
+            visibility: "hidden",
             position: "absolute",
             width: "508px",
             height: "150px",
             border: "1px solid",
           }}
         >
-          {/*@ts-ignore*/}
           <Rnd
             style={{
               visibility: "visible",
@@ -81,7 +95,7 @@ const TimeSlider = (months: TimeSliderProps) => {
               borderRight: "8px solid",
               borderRadius: "5px",
               borderColor: "#A6A6A6",
-              cursor: "move",
+              cursor: "move"
             }}
             default={{
               x: 0,
@@ -97,8 +111,6 @@ const TimeSlider = (months: TimeSliderProps) => {
             }}
             minWidth={2}
             dragAxis="x"
-            //@ts-ignore
-            // onDrag={(e, data) => console.log(data)}
             bounds="parent"
             size={{
               width: state.width,
@@ -119,24 +131,11 @@ const TimeSlider = (months: TimeSliderProps) => {
               });
             }}
           ></Rnd>
+          
         </div>
       </div>
-      <div style={{ position: "absolute", left: 550, bottom: 29 }}>
-        <p>
-          <strong>Start: </strong>
-
-          {getTime(state.x, months.count, months.date).toUTCString()}
-        </p>
-        <p>
-          <strong>End: </strong>
-          {getTime(
-            state.x + state.width,
-            //  - 500 / months.count
-            months.count,
-            months.date
-          ).toUTCString()}
-        </p>
-      </div>
+      <Labels startDate={startDate} endDate={endDate}/>
+    </div>
     </div>
   );
 };
