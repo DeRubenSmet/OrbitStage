@@ -12,6 +12,7 @@ import ReplayIcon from "@mui/icons-material/Replay";
 import FastForwardIcon from "@mui/icons-material/FastForward";
 import FastRewindIcon from "@mui/icons-material/FastRewind";
 import getTime from "./utils/time";
+import { VerticalAlignCenter } from "@mui/icons-material";
 
 interface TimeSliderProps {
   startDate: Date;
@@ -71,8 +72,10 @@ const TimeSlider = ({
   const [replayButtonColor, setReplayButtonColor] = useState("#bfbfbf");
   const [rewindButtonColor, setRewindButtonColor] = useState("#bfbfbf");
   const [forwardButtonColor, setForwardButtonColor] = useState("#bfbfbf");
-  const [state, setState] = useState({ x: 70, y: 40, width: 50, height: 60 });
+  const [state, setState] = useState({ x: 70, y: 45, width: 50, height: 110 });
   const [speed, setSpeed] = useState(10);
+  const [multiplier, setMultiplier] = useState(1);
+  const [marginTopBlocks, setMarginTopBlocks] = useState(0);
   const [blocks, setBlocks] = useState(
     getBlocks(count, startDate, endDate, facts, state)
   );
@@ -94,9 +97,6 @@ const TimeSlider = ({
     });
   }, [state]);
 
-  useEffect(() => {
-    setSpeed(speed);
-  }, [setSpeed]);
 
   useEffect(() => {
     if (statePlayButton === true) {
@@ -114,6 +114,7 @@ const TimeSlider = ({
       return <PauseIcon fontSize="large"></PauseIcon>;
     }
   };
+
   return (
     <div
       style={{
@@ -145,7 +146,7 @@ const TimeSlider = ({
           backgroundColor: playButtonColor,
           border: "none",
           position: "absolute",
-          left: 325,
+          left: 310,
           top: 45,
           paddingTop: 2,
           paddingLeft: 2,
@@ -165,6 +166,7 @@ const TimeSlider = ({
           setStatePlayButton(true);
           setState({ ...state, x: 0, y: state.y });
           setSpeed(10);
+          setMultiplier(1);
         }}
         style={{
           color: "white",
@@ -174,7 +176,7 @@ const TimeSlider = ({
           backgroundColor: replayButtonColor,
           border: "none",
           position: "absolute",
-          left: 380,
+          left: 365,
           top: 45,
           paddingTop: 3,
           paddingLeft: 3,
@@ -191,7 +193,10 @@ const TimeSlider = ({
           setRewindButtonColor("#d9d9d9");
         }}
         onClick={() => {
-          setSpeed(speed + 5);
+          if (multiplier > 0.25) {
+            setSpeed(speed + 2.5);
+            setMultiplier(multiplier / 2);
+          }
         }}
         style={{
           color: "white",
@@ -201,7 +206,7 @@ const TimeSlider = ({
           backgroundColor: rewindButtonColor,
           border: "none",
           position: "absolute",
-          left: 435,
+          left: 420,
           top: 45,
           paddingTop: 3,
           paddingLeft: 3,
@@ -218,8 +223,9 @@ const TimeSlider = ({
           setForwardButtonColor("#d9d9d9");
         }}
         onClick={() => {
-          if (speed !== 0) {
-            setSpeed(speed - 5);
+          if (multiplier < 4) {
+            setSpeed(speed - 2.5);
+            setMultiplier(multiplier * 2);
           }
         }}
         style={{
@@ -230,7 +236,7 @@ const TimeSlider = ({
           backgroundColor: forwardButtonColor,
           border: "none",
           position: "absolute",
-          left: 490,
+          left: 475,
           top: 45,
           paddingTop: 3,
           paddingLeft: 3,
@@ -240,8 +246,26 @@ const TimeSlider = ({
         <FastForwardIcon fontSize="large"></FastForwardIcon>
       </button>
       <div
+        style={{
+          color: "white",
+          height: 32,
+          width: 40,
+          borderRadius: 5,
+          backgroundColor: "#bfbfbf",
+          border: "none",
+          position: "absolute",
+          left: 530,
+          top: 45,
+          textAlign: "center",
+          paddingTop: 8,
+        }}
+      >
+        x{multiplier}
+      </div>
+      <div
         className="timeSlider"
         style={{
+
           height: "170px",
           width: "570px",
           display: "flex",
@@ -291,6 +315,7 @@ const TimeSlider = ({
                 borderRight: "8px solid",
                 borderRadius: "5px",
                 borderColor: "#A6A6A6",
+                borderWidth: 10,
                 cursor: "move",
               }}
               default={{
