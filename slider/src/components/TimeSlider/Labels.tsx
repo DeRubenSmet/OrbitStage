@@ -71,10 +71,9 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
         years.push({
           year: new Date(
             new Date(dateStart).setFullYear(
-              dateStart.getFullYear() +
-                (dayDifference / 365 / yearsLength) * i
+              dateStart.getFullYear() + (dayDifference / 365 / yearsLength) * i
             )
-          ).toLocaleString("nl-BE", {year: "numeric"}),
+          ).toLocaleString("nl-BE", { year: "numeric" }),
           index: i,
           range: 500 / yearsLength,
         });
@@ -101,26 +100,9 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
   // if (dayDifference < 32) {
   //   return <></>;
   // } else
-  if (dayDifference <= 3000) {
+  if (dayDifference > 600) {
     return (
       <>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            flexWrap: "nowrap",
-            justifyContent: "space-around",
-            alignItems: "flex-end",
-            bottom: 35,
-            left: 4,
-            position: "absolute",
-            
-          }}
-        >
-          {months.map((month) => (
-            <Month key={Math.random()} {...month} />
-          ))}
-        </div>
         <div
           style={{
             display: "flex",
@@ -139,9 +121,27 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
         </div>
       </>
     );
-  } else {
-    return <></>;
+  } else if (dayDifference < 367) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "nowrap",
+          justifyContent: "space-around",
+          alignItems: "flex-end",
+          bottom: 35,
+          left: 4,
+          position: "absolute",
+        }}
+      >
+        {months.map((month) => (
+          <Month key={Math.random()} {...month} />
+        ))}
+      </div>
+    );
   }
+  return null;
 };
 
 export default Labels;
