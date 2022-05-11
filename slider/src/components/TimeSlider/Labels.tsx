@@ -57,7 +57,8 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
       <div
         style={{
           width: 5,
-          marginRight: range,
+          marginRight: range - 3,
+          //borderLeft: '3px dotted green'
         }}
       >
         {month}
@@ -113,6 +114,7 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
             bottom: 35,
             left: 4,
             position: "absolute",
+            
           }}
         >
           {months.map((month) => (
