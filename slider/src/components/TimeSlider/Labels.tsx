@@ -100,7 +100,7 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
   // if (dayDifference < 32) {
   //   return <></>;
   // } else
-  if (dayDifference > 600) {
+  if (dayDifference > 732) {
     return (
       <>
         <div
@@ -110,7 +110,7 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
             flexWrap: "nowrap",
             justifyContent: "space-around",
             alignItems: "flex-end",
-            bottom: 10,
+            bottom: 35,
             left: 4,
             position: "absolute",
           }}
@@ -131,7 +131,7 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
           justifyContent: "space-around",
           alignItems: "flex-end",
           bottom: 35,
-          left: 4,
+          left: 8,
           position: "absolute",
         }}
       >
@@ -140,8 +140,44 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
         ))}
       </div>
     );
+  } else {
+    return (
+      <>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "nowrap",
+            justifyContent: "space-around",
+            alignItems: "flex-end",
+            bottom: 35,
+            left: 8,
+            position: "absolute",
+          }}
+        >
+          {months.map((month) => (
+            <Month key={Math.random()} {...month} />
+          ))}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "nowrap",
+            justifyContent: "space-around",
+            alignItems: "flex-end",
+            bottom: 10,
+            left: 4,
+            position: "absolute",
+          }}
+        >
+          {years.map((year) => (
+            <Year key={Math.random()} {...year} />
+          ))}
+        </div>
+      </>
+    );
   }
-  return null;
 };
 
 export default Labels;

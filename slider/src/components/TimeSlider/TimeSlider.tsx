@@ -13,6 +13,7 @@ import FastForwardIcon from "@mui/icons-material/FastForward";
 import FastRewindIcon from "@mui/icons-material/FastRewind";
 import getTime from "./utils/time";
 import { VerticalAlignCenter } from "@mui/icons-material";
+import { stat } from "fs";
 
 interface TimeSliderProps {
   startDate: Date;
@@ -62,6 +63,7 @@ const TimeSlider = ({
   facts,
   onChange,
   debugLabels,
+  sliderProps
 }: TimeSliderProps) => {
   // const width =  style?.width || 560;
   const count = facts.length;
@@ -72,7 +74,7 @@ const TimeSlider = ({
   const [replayButtonColor, setReplayButtonColor] = useState("#bfbfbf");
   const [rewindButtonColor, setRewindButtonColor] = useState("#bfbfbf");
   const [forwardButtonColor, setForwardButtonColor] = useState("#bfbfbf");
-  const [state, setState] = useState({ x: 70, y: 45, width: 50, height: 110 });
+  const [state, setState] = useState({ x: sliderProps?.range || 100, y: 45, width: sliderProps?.width || 120, height: 110 });
   const [speed, setSpeed] = useState(10);
   const [multiplier, setMultiplier] = useState(1);
   const [marginTopBlocks, setMarginTopBlocks] = useState(0);
@@ -149,7 +151,7 @@ const TimeSlider = ({
           left: 310,
           top: 45,
           paddingTop: 2,
-          paddingLeft: 2,
+          paddingLeft: 3,
         }}
         //@ts-ignore
       >
@@ -164,7 +166,7 @@ const TimeSlider = ({
         }}
         onClick={() => {
           setStatePlayButton(true);
-          setState({ ...state, x: 0, y: state.y });
+          setState({ ...state, x: 205, y: state.y, width: sliderProps?.width || 100 });
           setSpeed(10);
           setMultiplier(1);
         }}
@@ -209,7 +211,7 @@ const TimeSlider = ({
           left: 420,
           top: 45,
           paddingTop: 3,
-          paddingLeft: 3,
+          paddingLeft: 2,
         }}
         //@ts-ignore
       >
