@@ -87,30 +87,30 @@ const TimeSlider = ({
   const [playButtonStyle, setPlayButtonStyle] = useState({
     opacity: 0,
     bottom: 0,
-visibility: 'hidden',
-marginLeft: 0,
-width: 60
+    visibility: "hidden",
+    marginLeft: 0,
+    width: 60,
   });
   const [resetButtonStyle, setResetButtonStyle] = useState({
     opacity: 0,
     bottom: 0,
-    visibility: 'hidden',
+    visibility: "hidden",
     marginLeft: 0,
-    width: 60
+    width: 60,
   });
   const [rewindButtonStyle, setRewindButtonStyle] = useState({
     opacity: 0,
     bottom: 0,
-    visibility: 'hidden',
+    visibility: "hidden",
     marginLeft: 0,
-    width: 60
+    width: 60,
   });
   const [forwardButtonStyle, setForwardButtonStyle] = useState({
     opacity: 0,
     bottom: 0,
-    visibility: 'hidden',
+    visibility: "hidden",
     marginLeft: 0,
-    width: 60
+    width: 60,
   });
   const [blocks, setBlocks] = useState(
     getBlocks(count, startDate, endDate, facts, state)
@@ -218,9 +218,9 @@ width: 60
               setPlayButtonStyle({
                 opacity: 0,
                 bottom: 0,
-                visibility: 'hidden',
+                visibility: "hidden",
                 marginLeft: 3,
-                width: 60
+                width: 60,
               });
             }}
             onMouseEnter={() => {
@@ -228,16 +228,16 @@ width: 60
               setPlayButtonStyle({
                 opacity: 1,
                 bottom: 105,
-                visibility: 'visible',
+                visibility: "visible",
                 marginLeft: -12,
-                width: 60
+                width: 60,
               });
             }}
             onClick={() => {
               setStatePlayButton(!statePlayButton);
             }}
             style={{
-              cursor: 'pointer',
+              cursor: "pointer",
               color: "white",
               height: 40,
               width: 40,
@@ -261,9 +261,9 @@ width: 60
               setResetButtonStyle({
                 opacity: 0,
                 bottom: 0,
-                visibility: 'hidden',
+                visibility: "hidden",
                 marginLeft: 3,
-                width: 60
+                width: 60,
               });
             }}
             onMouseEnter={() => {
@@ -271,9 +271,9 @@ width: 60
               setResetButtonStyle({
                 opacity: 1,
                 bottom: 105,
-                visibility: 'visible',
+                visibility: "visible",
                 marginLeft: -12,
-                width: 60
+                width: 60,
               });
             }}
             onClick={() => {
@@ -288,6 +288,7 @@ width: 60
               setMultiplier(1);
             }}
             style={{
+              cursor: "pointer",
               color: "white",
               height: 40,
               width: 40,
@@ -302,7 +303,7 @@ width: 60
             }}
             //@ts-ignore
           >
-            {buttonSpan('Reset', resetButtonStyle)}
+            {buttonSpan("Reset", resetButtonStyle)}
             <ReplayIcon fontSize="large"></ReplayIcon>
           </button>
           <button
@@ -311,9 +312,9 @@ width: 60
               setRewindButtonStyle({
                 opacity: 0,
                 bottom: 0,
-                visibility: 'hidden',
+                visibility: "hidden",
                 marginLeft: 3,
-                width: 60
+                width: 60,
               });
             }}
             onMouseEnter={() => {
@@ -321,9 +322,9 @@ width: 60
               setRewindButtonStyle({
                 opacity: 1,
                 bottom: 105,
-                visibility: 'visible',
+                visibility: "visible",
                 marginLeft: -12,
-                width: 60
+                width: 60,
               });
             }}
             onClick={() => {
@@ -333,6 +334,7 @@ width: 60
               }
             }}
             style={{
+              cursor: "pointer",
               color: "white",
               height: 40,
               width: 40,
@@ -347,7 +349,7 @@ width: 60
             }}
             //@ts-ignore
           >
-            {buttonSpan('Rewind', rewindButtonStyle)}
+            {buttonSpan("Rewind", rewindButtonStyle)}
             <FastRewindIcon fontSize="large"></FastRewindIcon>
           </button>
           <button
@@ -356,9 +358,9 @@ width: 60
               setForwardButtonStyle({
                 opacity: 0,
                 bottom: 0,
-                visibility: 'hidden',
+                visibility: "hidden",
                 marginLeft: 3,
-                width: 60
+                width: 60,
               });
             }}
             onMouseEnter={() => {
@@ -366,9 +368,9 @@ width: 60
               setForwardButtonStyle({
                 opacity: 1,
                 bottom: 105,
-                visibility: 'visible',
+                visibility: "visible",
                 marginLeft: -12,
-                width: 60
+                width: 60,
               });
             }}
             onClick={() => {
@@ -378,6 +380,7 @@ width: 60
               }
             }}
             style={{
+              cursor: "pointer",
               color: "white",
               height: 40,
               width: 40,
@@ -392,11 +395,12 @@ width: 60
             }}
             //@ts-ignore
           >
-            {buttonSpan('Forward', forwardButtonStyle)}
+            {buttonSpan("Forward", forwardButtonStyle)}
             <FastForwardIcon fontSize="large"></FastForwardIcon>
           </button>
           <div
             style={{
+              cursor: "default",
               color: "white",
               height: 32,
               width: 40,

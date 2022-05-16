@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import TimeSlider from "./components/TimeSlider";
 
-const count = 40;
+const count = 60;
 const startDate = new Date(2019, 1, 1);
 const endDate = new Date(2020, 8, 1);
 const sliderProps = { range: 0, width: 510 };
@@ -32,7 +32,7 @@ function App() {
       <TimeSlider
         {...{ startDate, endDate, facts }}
         onChange={onChangeHandler}
-        debugLabels
+        //debugLabels
         sliderProps={sliderProps} //style=()
       />
     </>
