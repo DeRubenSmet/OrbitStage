@@ -2,10 +2,10 @@ import React from "react";
 import "./App.css";
 import TimeSlider from "./components/TimeSlider";
 
-const count = 60;
+const count = 40;
 const startDate = new Date(2019, 1, 1);
 const endDate = new Date(2020, 8, 1);
-const sliderProps = { range: 205, width: 100 };
+const sliderProps = { range: 0, width: 510 };
 const facts = Array(count)
   .fill(undefined)
   .map(() => ({
