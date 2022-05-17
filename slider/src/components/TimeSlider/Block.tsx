@@ -31,7 +31,8 @@ export const getBlocks = (
   startDate: Date,
   endDate: Date,
   facts: { count: number; }[],
-  state: { x: number; y: number; width: number; height: number }
+  state: { x: number; y: number; width: number; height: number },
+  widthTotal: number
 ) => {
   let amount = count;
   
@@ -49,7 +50,7 @@ export const getBlocks = (
   // } 
   for (let i = 0; i < amount; i++) {
     let factsCount = facts[i].count;
-    let x = 250 / amount + (i * 510) / amount;
+    let x = widthTotal/510*250 / amount + (i * widthTotal) / amount;
     if(factsCount < 10){
       factsCount = 7;
       colorBlock = "#F7D1C2";

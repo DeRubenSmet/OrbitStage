@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
+const Labels = ({ startDate, endDate, width }: { startDate: Date; endDate: Date, width: number }) => {
   let dateStart = new Date(startDate);
   dateStart = new Date(
     new Date(dateStart.setMonth(dateStart.getMonth() - 1)).setDate(
@@ -42,7 +42,7 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
       <div
         style={{
           width: 10,
-          marginRight: range - 10,
+          marginRight: (range - width/510*10),
         }}
       >
         {year}
@@ -57,7 +57,7 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
       <div
         style={{
           width: 5,
-          marginRight: range - 3,
+          marginRight: (range - width/510*3),
           //borderLeft: '3px dotted green'
         }}
       >
@@ -75,7 +75,7 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
             )
           ).toLocaleString("nl-BE", { year: "numeric" }),
           index: i,
-          range: 500 / yearsLength,
+          range: width/510*500 / yearsLength,
         });
       }
     }
@@ -91,7 +91,7 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
             .toLocaleString("nl-BE", { month: "short" })
             .split(".")[0],
           index: i,
-          range: 500 / 10,
+          range: width/510*500 / 10,
         });
       }
     }
@@ -111,7 +111,7 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
             justifyContent: "space-around",
             alignItems: "flex-end",
             bottom: 35,
-            left: 4,
+            left: width/510*4,
             position: "absolute",
           }}
         >
@@ -131,7 +131,7 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
           justifyContent: "space-around",
           alignItems: "flex-end",
           bottom: 35,
-          left: 8,
+          left: width/510*8,
           position: "absolute",
         }}
       >
@@ -151,7 +151,7 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
             justifyContent: "space-around",
             alignItems: "flex-end",
             bottom: 35,
-            left: 8,
+            left: width/510*8,
             position: "absolute",
           }}
         >
@@ -167,7 +167,7 @@ const Labels = ({ startDate, endDate }: { startDate: Date; endDate: Date }) => {
             justifyContent: "space-around",
             alignItems: "flex-end",
             bottom: 10,
-            left: 4,
+            left: width/510*4,
             position: "absolute",
           }}
         >

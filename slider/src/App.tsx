@@ -5,7 +5,7 @@ import TimeSlider from "./components/TimeSlider";
 const count = 60;
 const startDate = new Date(2019, 1, 1);
 const endDate = new Date(2020, 8, 1);
-const sliderProps = { range: 0, width: 510 };
+const sliderProps = { range: 0, width: 700 };
 const facts = Array(count)
   .fill(undefined)
   .map(() => ({
