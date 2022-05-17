@@ -4,7 +4,7 @@ import PauseIcon from "@mui/icons-material/Pause";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import ReplayIcon from "@mui/icons-material/Replay";
 import React from "react";
-import { useEffect, useRef, useState, useContext } from "react";
+import { useEffect, useRef, useState} from "react";
 import { Rnd } from "react-rnd";
 import { createContext } from "vm";
 import Block, { getBlocks } from "./Block";
@@ -53,7 +53,7 @@ function useInterval(callback, delay) {
     }
   }, [delay]);
 }
-  const width = createContext({});
+
 const TimeSlider = ({
   startDate,
   endDate,

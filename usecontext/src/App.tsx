@@ -1,20 +1,16 @@
-import React, {useContext} from 'react';
+import React, {createContext, useContext, useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-
+  const NumberContext = createContext({});
 
 function App() {
-  //@ts-ignore
-  const NumberContext = React.createContext();
-  function Display(){
-  const value = useContext(NumberContext)
-  //@ts-ignore
-  return <div>feggfgsr {value}</div>;
-}
-  return (
-    <Display></Display>
-  );
-}
+const [user, setUser] = useState('test');
 
+  return (
+    <NumberContext.Provider value={'test'}>
+      <div>{}</div>
+    </NumberContext.Provider>
+  );
+  }
 export default App;
